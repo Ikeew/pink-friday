@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, type CSSProperties } from 'react';
 import type { Look } from '../../types';
 
 const PANTS = '#27304A';
@@ -130,6 +130,15 @@ function Crown() {
       <circle cx="36" cy="-78" r="4" fill="#FFE873" />
       <circle cx="0" cy="-58" r="4" fill="#E0247F" strokeWidth="1.5" />
     </g>
+  );
+}
+
+/** A mesma coroa, para colocar sobre os personagens em imagem. */
+export function CrownBadge({ className, style }: { className?: string; style?: CSSProperties }) {
+  return (
+    <svg aria-hidden="true" viewBox="-40 -92 80 54" className={className} style={style}>
+      <Crown />
+    </svg>
   );
 }
 

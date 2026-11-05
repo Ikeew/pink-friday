@@ -79,7 +79,7 @@ export function RaceBoard({ view, status, cycles, onSelectCycle, highlight }: Ra
           )}
         </div>
 
-        <ol className="relative flex h-full flex-col gap-1 py-3 pr-10 pl-2 wide:gap-0 wide:pt-8 wide:pr-[6.5rem] wide:pb-2 wide:pl-3">
+        <ol className="relative flex h-full flex-col gap-1 py-3 pr-10 pl-2 wide:gap-0 wide:pt-10 wide:pr-[6.5rem] wide:pb-2 wide:pl-3">
           {view.rows.map((row) => (
             <RaceLane
               key={row.seller.id}

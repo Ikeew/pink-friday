@@ -12,12 +12,24 @@ export interface Look {
   stubble?: boolean;
 }
 
+/** Personagem recortado que corre na pista no lugar do mascote vetorial. */
+export interface Sprite {
+  src: string;
+  /** Largura ÷ altura da imagem. */
+  aspect: number;
+  /** Centro e topo da cabeça, e largura da coroa, em % da imagem. */
+  crownX: number;
+  crownY: number;
+  crownWidth: number;
+}
+
 export interface Seller {
   id: string;
   name: string;
   look: Look;
   /** URL de uma foto real. Quando presente, substitui o avatar vetorial. */
   photo?: string;
+  sprite?: Sprite;
 }
 
 /** Configuração manual de um ciclo; os valores de venda vêm da API. */

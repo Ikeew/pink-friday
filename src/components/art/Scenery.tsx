@@ -100,15 +100,6 @@ export function RaceScenery() {
         </g>
         <path d="M0 74 C240 58 520 84 1000 62 V90 H0Z" fill="#FBF1F3" />
       </svg>
-      <svg
-        className={svgClass}
-        viewBox="0 0 1000 480"
-        preserveAspectRatio="xMaxYMax meet"
-      >
-        <Crystal x={900} y={232} scale={0.9} opacity={0.9} />
-        <Crystal x={818} y={382} scale={0.55} opacity={0.9} />
-        <Crystal x={945} y={486} scale={2} opacity={0.95} />
-      </svg>
     </div>
   );
 }

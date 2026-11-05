@@ -1,8 +1,8 @@
 import type { CSSProperties } from 'react';
 import type { SellerHighlight } from '../hooks/useSellerHighlight';
 import { formatCurrency, formatPercent } from '../lib/format';
-import type { LaneRow } from '../types';
-import { Mascot } from './art/Mascot';
+import type { LaneRow, Sprite } from '../types';
+import { CrownBadge, Mascot } from './art/Mascot';
 import { Avatar, RankBadge } from './SellerBadges';
 
 /** Acima deste avanço não há espaço à direita do corredor, e o valor passa para a esquerda. */
@@ -37,6 +37,23 @@ function GoalChip({ row, active }: { row: LaneRow; active: boolean }) {
     >
       {row.note}
     </span>
+  );
+}
+
+function SpriteRunner({ sprite, crown }: { sprite: Sprite; crown: boolean }) {
+  return (
+    <div
+      className="run-body absolute right-0 bottom-0 h-full wide:h-[105%]"
+      style={{ aspectRatio: sprite.aspect }}
+    >
+      <img src={sprite.src} alt="" className="size-full" />
+      {crown && (
+        <CrownBadge
+          className="absolute h-auto -translate-x-1/2 -translate-y-3/4 overflow-visible"
+          style={{ left: `${sprite.crownX}%`, top: `${sprite.crownY}%`, width: `${sprite.crownWidth}%` }}
+        />
+      )}
+    </div>
   );
 }
 
@@ -83,17 +100,21 @@ export function RaceLane({ row, progress, highlight }: RaceLaneProps) {
 
         {/* O grupo inteiro se desloca por transform, na largura da pista. */}
         <div className="lane-runner pointer-events-none absolute inset-0 z-[2]">
-          <span aria-hidden="true" className="absolute bottom-7 -left-[4.25rem] flex gap-2 wide:-left-[5rem]">
+          <span aria-hidden="true" className="absolute bottom-7 -left-[5.25rem] flex gap-2 wide:-left-[6.75rem]">
             <i className="dust block size-2.5 rounded-full bg-[#D8B6A6]" />
             <i className="dust block size-2 rounded-full bg-[#D8B6A6] [animation-delay:300ms]" />
           </span>
-          <div className="absolute bottom-1 -left-[3.1rem] h-[4.25rem] w-[4rem] origin-bottom transition-all duration-300 ease-premium group-hover:scale-110 wide:-left-[3.9rem] wide:h-[5.5rem] wide:w-[5.25rem]">
-            <Mascot look={seller.look} crown={row.reachedGoal} className="size-full" />
+          <div className="absolute bottom-1 -left-[4rem] h-[4.25rem] w-[4rem] origin-bottom transition-all duration-300 ease-premium group-hover:scale-110 wide:-left-[5.25rem] wide:h-[5.5rem] wide:w-[5.25rem]">
+            {seller.sprite ? (
+              <SpriteRunner sprite={seller.sprite} crown={row.reachedGoal} />
+            ) : (
+              <Mascot look={seller.look} crown={row.reachedGoal} className="size-full" />
+            )}
           </div>
           <div
             className={`absolute top-1/2 hidden -translate-y-[62%] rounded-lg px-2 py-1 wide:block ${
               row.reachedGoal ? 'bg-plum shadow-card' : 'bg-white/95'
-            } ${flipLabel ? 'left-0 -translate-x-[calc(100%+4.25rem)]' : 'left-[1.4rem]'}`}
+            } ${flipLabel ? 'left-0 -translate-x-[calc(100%+5.75rem)]' : 'left-2'}`}
           >
             <Stat row={row} onDark={row.reachedGoal} />
           </div>
