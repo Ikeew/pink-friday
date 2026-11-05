@@ -11,11 +11,11 @@ function FinishGate() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute top-2 right-2 bottom-3 w-10 lg:right-5 lg:w-[5.75rem]"
+      className="pointer-events-none absolute top-2 right-2 bottom-3 w-10 wide:right-5 wide:w-[5.75rem]"
     >
-      <div className="checker absolute top-3 bottom-0 left-0 w-2.5 rounded-sm shadow-card lg:w-3.5" />
-      <div className="checker absolute top-3 right-0 bottom-6 w-2.5 rounded-sm shadow-card lg:w-3.5" />
-      <div className="absolute inset-x-0 top-0 rounded-sm bg-gradient-to-r from-brand to-brand-bright py-0.5 text-center font-display text-xs font-extrabold tracking-wide text-white italic shadow-card lg:text-[1.75rem] lg:leading-tight">
+      <div className="checker absolute top-3 bottom-0 left-0 w-2.5 rounded-sm shadow-card wide:w-3.5" />
+      <div className="checker absolute top-3 right-0 bottom-6 w-2.5 rounded-sm shadow-card wide:w-3.5" />
+      <div className="absolute inset-x-0 top-0 rounded-sm bg-gradient-to-r from-brand to-brand-bright py-0.5 text-center font-display text-xs font-extrabold tracking-wide text-white italic shadow-card wide:text-[1.75rem] wide:leading-tight">
         META
       </div>
     </div>
@@ -79,7 +79,7 @@ export function RaceBoard({ view, status, cycles, onSelectCycle, highlight }: Ra
           )}
         </div>
 
-        <ol className="relative flex h-full flex-col gap-1 py-3 pr-10 pl-2 lg:gap-0 lg:pt-8 lg:pr-[6.5rem] lg:pb-2 lg:pl-3">
+        <ol className="relative flex h-full flex-col gap-1 py-3 pr-10 pl-2 wide:gap-0 wide:pt-8 wide:pr-[6.5rem] wide:pb-2 wide:pl-3">
           {view.rows.map((row) => (
             <RaceLane
               key={row.seller.id}

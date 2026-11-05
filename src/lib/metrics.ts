@@ -17,8 +17,11 @@ function buildLanes(cycle: Cycle, data: DashboardData | null, realized: number):
 
   return top.map((sales, index) => {
     const behindLeader = leaderAmount - sales.amount;
-    const note = sellerTarget
-      ? `${formatPercent(clamp01(sales.amount / sellerTarget))} da meta · faltam ${formatCurrency(Math.max(0, sellerTarget - sales.amount))}`
+    const reachedGoal = sellerTarget !== undefined && sales.amount >= sellerTarget;
+    const note = reachedGoal
+      ? `Meta batida · ${formatCurrency(sales.amount - sellerTarget)} acima`
+      : sellerTarget
+      ? `${formatPercent(clamp01(sales.amount / sellerTarget))} da meta · faltam ${formatCurrency(sellerTarget - sales.amount)}`
       : index === 0
         ? `Líder · ${sales.count} vendas`
         : `${sales.count} vendas · ${formatCurrency(behindLeader)} atrás do líder`;
@@ -29,6 +32,7 @@ function buildLanes(cycle: Cycle, data: DashboardData | null, realized: number):
       amount: sales.amount,
       share: realized > 0 ? sales.amount / realized : 0,
       progress: scale > 0 ? clamp01(sales.amount / scale) : 0,
+      reachedGoal,
       note,
     };
   });

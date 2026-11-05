@@ -1,5 +1,21 @@
 @import 'tailwindcss';
 
+/*
+ * Navegadores de TV costumam informar menos pixels que a tela tem (960x540 em Full HD).
+ * Por isso os layouts maiores valem também para qualquer tela larga na horizontal,
+ * que usa o painel de tela única em escala. Tablets 4:3 e celulares deitados ficam de fora.
+ */
+@custom-variant wide {
+  @media (min-width: 64rem), (min-width: 56.25rem) and (min-aspect-ratio: 8/5) {
+    @slot;
+  }
+}
+@custom-variant panel {
+  @media (min-width: 80rem), (min-width: 56.25rem) and (min-aspect-ratio: 8/5) {
+    @slot;
+  }
+}
+
 @theme {
   --font-display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
   --font-sans: 'Barlow', system-ui, sans-serif;
@@ -33,12 +49,12 @@
   }
 
   /*
-   * A partir de 1280px o painel inteiro escala em proporção à tela (notebook, monitor, TV),
-   * pois todas as medidas estão em rem. Abaixo disso, o layout reflui com fonte fixa em 16px.
+   * No layout de tela única, o painel inteiro escala em proporção à tela, pois todas as
+   * medidas estão em rem. Fora dele, o conteúdo reflui com fonte fixa em 16px.
    */
-  @media (min-width: 80rem) {
+  @variant panel {
     html {
-      font-size: clamp(12.5px, min(1vw, 1.7778vh), 40px);
+      font-size: clamp(9px, min(1vw, 1.7778vh), 40px);
     }
   }
 }
@@ -64,7 +80,7 @@
     }
   }
 
-  @media (min-width: 80rem) {
+  @variant panel {
     .hero-grid {
       height: 18.5rem;
       gap: 0;
@@ -90,7 +106,7 @@
     --x: calc(var(--start) + var(--p) * (100% - var(--start)));
   }
 
-  @media (min-width: 64rem) {
+  @variant wide {
     .lane {
       --start: 9rem;
     }

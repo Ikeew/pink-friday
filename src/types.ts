@@ -60,6 +60,8 @@ export interface LaneRow {
   share: number;
   /** Posição na pista (0–1). */
   progress: number;
+  /** Atingiu a meta individual do ciclo. */
+  reachedGoal: boolean;
   /** Comparação exibida no destaque da raia. */
   note: string;
 }

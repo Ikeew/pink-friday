@@ -35,7 +35,7 @@ export function GoalDonut({ view }: { view: CycleView }) {
   return (
     <Panel title="Meta de venda" className="h-full">
       <div className="flex flex-1 flex-col justify-between gap-4 p-5">
-        <div className="relative mx-auto my-auto aspect-square w-full max-w-60 xl:max-w-none">
+        <div className="relative mx-auto my-auto aspect-square w-full max-w-60 panel:max-w-none">
           <svg
             role="img"
             aria-label={

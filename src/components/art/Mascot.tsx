@@ -115,15 +115,30 @@ interface MascotProps {
   pose?: 'run' | 'stand';
   /** Estampa da camiseta; só vale em tamanhos maiores, onde o texto é legível. */
   shirt?: readonly [string, string];
+  crown?: boolean;
   className?: string;
 }
 
+/** Coroa de quem bateu a meta, apoiada no alto da cabeça. */
+function Crown() {
+  return (
+    <g stroke="#7A4A00" strokeWidth="2.5" strokeLinejoin="round">
+      <path d="M-30-40L-36-76L-15-58L0-84L15-58L36-76L30-40Z" fill="#FFC629" />
+      <path d="M-30-40H30L31-48H-31Z" fill="#F59E0B" />
+      <circle cx="-36" cy="-78" r="4" fill="#FFE873" />
+      <circle cx="0" cy="-86" r="4.5" fill="#FFE873" />
+      <circle cx="36" cy="-78" r="4" fill="#FFE873" />
+      <circle cx="0" cy="-58" r="4" fill="#E0247F" strokeWidth="1.5" />
+    </g>
+  );
+}
+
 /** Personagem vetorial com marreta. A pose `run` tem animação contínua de corrida. */
-export const Mascot = memo(function Mascot({ look, pose = 'run', shirt, className }: MascotProps) {
+export const Mascot = memo(function Mascot({ look, pose = 'run', shirt, crown, className }: MascotProps) {
   const running = pose === 'run';
 
   return (
-    <svg aria-hidden="true" viewBox="0 0 200 210" className={className}>
+    <svg aria-hidden="true" viewBox="0 0 200 210" className={`overflow-visible ${className ?? ''}`}>
       <g className={running ? 'run-body' : undefined}>
         <g className={running ? 'run-limb-a' : undefined} style={ARM_ORIGIN}>
           <path d="M124 112Q146 120 152 102" fill="none" stroke={look.skin} strokeWidth="11" strokeLinecap="round" />
@@ -144,6 +159,7 @@ export const Mascot = memo(function Mascot({ look, pose = 'run', shirt, classNam
         <circle cx="71" cy="96" r="7.5" fill={look.skin} />
         <g transform="translate(112 62) rotate(4) scale(0.92)">
           <MascotHead look={look} />
+          {crown && <Crown />}
         </g>
       </g>
     </svg>

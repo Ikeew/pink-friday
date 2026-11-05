@@ -48,6 +48,6 @@ A tela atualiza a cada 10 minutos (após uma falha, tenta de novo em 1 minuto), 
 
 ## Layout
 
-- A partir de 1280px o painel ocupa uma tela e escala em proporção à janela, de notebook a TV.
-- Abaixo de 1280px o conteúdo reflui em colunas, com fonte fixa de 16px.
+- A partir de 1280px, ou em qualquer tela larga na horizontal (900px ou mais, proporção 8:5 ou maior), o painel ocupa uma tela e escala em proporção à janela, de notebook a TV.
+- Nos demais casos, o conteúdo reflui em colunas, com fonte fixa de 16px.
 - Animações usam `transform` e opacidade, e respeitam `prefers-reduced-motion`.

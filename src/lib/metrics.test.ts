@@ -53,6 +53,14 @@ describe('buildCycleView', () => {
     expect(view.rows[1]?.note).toContain('75% da meta');
   });
 
+  it('marca quem atingiu a meta individual, inclusive no valor exato', () => {
+    const view = buildCycleView({ ...cycle, sellerTarget: 300_000 }, data);
+
+    expect(view.rows.map((row) => row.reachedGoal)).toEqual([true, true, false, false, false]);
+    expect(view.rows[0]?.note).toContain('Meta batida');
+    expect(buildCycleView(cycle, data).rows[0]?.reachedGoal).toBe(false);
+  });
+
   it('não quebra sem dados nem divide por zero', () => {
     const view = buildCycleView(cycle, null);
 

@@ -30,11 +30,11 @@ export function App() {
       <main className="relative z-10 flex flex-1 flex-col gap-4 px-4 pb-4 md:px-5 md:pb-5">
         <KpiStrip view={view} overallTarget={OVERALL_TARGET} />
 
-        <div className="grid flex-1 grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-[16.5rem_minmax(0,1fr)_17.5rem]">
-          <div className="order-2 xl:order-1">
+        <div className="grid flex-1 grid-cols-1 gap-4 md:grid-cols-2 panel:grid-cols-[16.5rem_minmax(0,1fr)_17.5rem]">
+          <div className="order-2 panel:order-1">
             <GoalDonut view={view} />
           </div>
-          <div className="order-1 md:col-span-2 xl:order-2 xl:col-span-1">
+          <div className="order-1 md:col-span-2 panel:order-2 panel:col-span-1">
             <RaceBoard
               view={view}
               status={status}
