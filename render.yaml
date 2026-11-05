@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: corrida-quebra-de-precos
+    runtime: node
+    plan: free
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: 24.20.0
+      - key: GRONER_API_URL
+        value: https://catarinnasolar.api.groner.app/api/DashboardQuery/Executar
+      # Valor preenchido no painel do Render; nunca neste arquivo.
+      - key: GRONER_API_TOKEN
+        sync: false
