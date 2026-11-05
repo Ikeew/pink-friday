@@ -1,7 +1,7 @@
 import { RACE_SIZE } from '../data/dashboard';
 import type { Cycle, CycleView, DashboardData, LaneRow, RankedAmount, RankingRow } from '../types';
 import { formatCurrency, formatPercent } from './format';
-import { titleCase, toSeller } from './people';
+import { shortName, titleCase, toSeller } from './people';
 
 /** Sem meta individual, o líder fica neste ponto da pista e os demais, em proporção a ele. */
 const LEADER_POSITION = 0.75;
@@ -39,17 +39,13 @@ function buildLanes(cycle: Cycle, data: DashboardData | null, realized: number):
 }
 
 function buildRanking(entries: RankedAmount[], people: boolean): RankingRow[] {
-  return entries.slice(0, RANKING_SIZE).map((entry, index) => {
-    const seller = people ? toSeller(entry.name) : undefined;
-    return {
-      id: entry.name,
-      // O seletor do painel já diz "Equipes"; sem o prefixo, o nome cabe na linha.
-      name: seller?.name ?? titleCase(entry.name).replace(/^Equipe\s+/, ''),
-      rank: index + 1,
-      amount: entry.amount,
-      seller,
-    };
-  });
+  return entries.slice(0, RANKING_SIZE).map((entry, index) => ({
+    id: entry.name,
+    // O seletor do painel já diz "Equipes"; sem o prefixo, o nome cabe na linha.
+    name: people ? shortName(entry.name) : titleCase(entry.name).replace(/^Equipe\s+/, ''),
+    rank: index + 1,
+    amount: entry.amount,
+  }));
 }
 
 /** Deriva tudo o que o painel exibe a partir da meta manual e dos dados da API. */

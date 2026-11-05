@@ -1,9 +1,9 @@
-import { Trophy, Users } from 'lucide-react';
+import { Trophy } from 'lucide-react';
 import { useState } from 'react';
 import { formatNumber } from '../lib/format';
 import type { RankingRow } from '../types';
 import { Panel } from './Panel';
-import { Avatar, RankBadge } from './SellerBadges';
+import { RankBadge } from './SellerBadges';
 
 const VIEWS = [
   { id: 'teams', label: 'Equipes', caption: 'Ranking de equipes por valor vendido no ciclo' },
@@ -76,21 +76,12 @@ export function RankingPanel({ teams, sdrs, loaded }: RankingPanelProps) {
                       <td className={`rounded-l-full pl-1.5 ${cell}`}>
                         <RankBadge rank={row.rank} className="size-7 text-base" />
                       </td>
-                      <td className={cell}>
-                        <span className="flex items-center gap-2">
-                          {row.seller ? (
-                            <Avatar seller={row.seller} className="size-8" />
-                          ) : (
-                            <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-canvas text-brand-deep ring-2 ring-white">
-                              <Users aria-hidden="true" className="size-4" />
-                            </span>
-                          )}
-                          <span className="truncate text-lg font-semibold text-ink" title={row.name}>
-                            {row.name}
-                          </span>
+                      <td className={`pl-1 ${cell}`}>
+                        <span className="block truncate text-[1.4rem] leading-tight font-semibold text-ink" title={row.name}>
+                          {row.name}
                         </span>
                       </td>
-                      <td className={`rounded-r-full pr-3 text-right text-lg font-semibold text-ink ${cell}`}>
+                      <td className={`rounded-r-full pr-3 text-right text-[1.4rem] leading-tight font-semibold text-ink ${cell}`}>
                         {formatNumber(row.amount)}
                       </td>
                     </tr>

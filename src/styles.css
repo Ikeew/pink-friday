@@ -108,7 +108,7 @@
 
   @variant wide {
     .lane {
-      --start: 9rem;
+      --start: 11rem;
     }
   }
 
@@ -138,6 +138,21 @@
   }
   .drift {
     animation: drift 5s ease-in-out infinite alternate;
+  }
+
+  /* Mascote da direita: passada de corrida. */
+  .hero-runner {
+    transform-origin: 50% 100%;
+    animation: hero-stride 520ms ease-in-out infinite alternate;
+  }
+}
+
+@keyframes hero-stride {
+  from {
+    transform: translateY(0) rotate(-2deg);
+  }
+  to {
+    transform: translateY(-0.7rem) rotate(2deg);
   }
 }
 

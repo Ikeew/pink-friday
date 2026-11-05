@@ -50,7 +50,6 @@ export function toSeller(rawName: string): Seller {
     id: name,
     name: shortName(name),
     look: profile?.look ?? generatedLook(name),
-    photo: profile?.photo,
     sprite: profile?.sprite,
   };
 }

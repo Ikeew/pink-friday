@@ -27,8 +27,6 @@ export interface Seller {
   id: string;
   name: string;
   look: Look;
-  /** URL de uma foto real. Quando presente, substitui o avatar vetorial. */
-  photo?: string;
   sprite?: Sprite;
 }
 
@@ -83,8 +81,6 @@ export interface RankingRow {
   name: string;
   rank: number;
   amount: number;
-  /** Presente apenas em rankings de pessoas. */
-  seller?: Seller;
 }
 
 export interface CycleView {

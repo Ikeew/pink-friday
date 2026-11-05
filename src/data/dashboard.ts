@@ -20,21 +20,17 @@ export const cycles: Cycle[] = [
   { id: 'ciclo-3', label: 'Ciclo 3', start: '2026-10-21', end: '2026-10-31', target: 3_200_000, sellerTarget: SELLER_TARGET },
 ];
 
-/** Arte em `public/avatars`: `<nome>.webp` (corpo inteiro) e `<nome>-rosto.webp`. */
+/** Personagem em `public/avatars/<nome>.webp`. */
 function avatar(name: string, aspect: number, crownX: number, crownY: number, crownWidth: number) {
-  return {
-    photo: `/avatars/${name}-rosto.webp`,
-    sprite: { src: `/avatars/${name}.webp`, aspect, crownX, crownY, crownWidth },
-  };
+  return { sprite: { src: `/avatars/${name}.webp`, aspect, crownX, crownY, crownWidth } };
 }
 
 /**
- * Foto e aparência opcionais por pessoa, usando o nome exatamente como vem da API.
+ * Personagem ou aparência opcionais por pessoa, usando o nome exatamente como vem da API.
  * Exemplo:
- *   'CAMILA LOPES': { photo: '/fotos/camila.jpg' },
  *   'LUCAS MACHADO': { look: { skin: '#F2C09A', hair: '#2B1B14', hairStyle: 'short', beard: '#2B1B14' } },
  */
-export const profiles: Record<string, { photo?: string; look?: Look; sprite?: Sprite }> = {
+export const profiles: Record<string, { look?: Look; sprite?: Sprite }> = {
   'GIOVANE SAMOEL': avatar('giovane', 0.924, 70.8, -0.2, 38.4),
   'SÁVIO SARTORI LOPES': avatar('savio', 0.875, 75.8, 0, 38.9),
   'GUSTAVO LUCIANO': avatar('gustavo', 1.035, 74.1, -0.8, 33.8),

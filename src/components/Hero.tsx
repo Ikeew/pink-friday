@@ -1,32 +1,29 @@
 import { CalendarDays } from 'lucide-react';
 import { formatPeriod } from '../lib/format';
-import type { Cycle, Look } from '../types';
+import type { Cycle } from '../types';
+import { HeroRunner } from './art/HeroRunner';
 import { Logo } from './art/Logo';
-import { Mascot } from './art/Mascot';
-import { HeroScenery } from './art/Scenery';
 import { TitleLockup } from './art/TitleLockup';
-
-const HOST_LOOKS: Record<'him' | 'her' | 'runner', Look> = {
-  him: { skin: '#F2C09A', hair: '#2B1B14', hairStyle: 'short', glasses: true, beard: '#2B1B14' },
-  her: { skin: '#F8D2B4', hair: '#D9A65C', hairStyle: 'long' },
-  runner: { skin: '#E3A97F', hair: '#2E2826', hairStyle: 'short', beard: '#6F6A68' },
-};
-
-const SOLAR_SHIRT = ['SOLAR', 'Experience'] as const;
-const FRIDAY_SHIRT = ['PINK', 'FRIDAY'] as const;
 
 export function Hero({ cycle }: { cycle: Cycle }) {
   return (
     <header className="relative overflow-hidden px-4 pt-4 pb-5 md:px-5 panel:p-0">
-      <HeroScenery />
+      <img
+        src="/hero/fundo.webp"
+        alt=""
+        width={2048}
+        height={768}
+        className="absolute inset-0 size-full object-cover object-[50%_40%]"
+      />
+      {/* Garante o contraste do logo branco, qualquer que seja o corte da imagem. */}
       <div
         aria-hidden="true"
-        className="absolute top-0 left-0 h-[22rem] w-[34rem] max-w-full bg-[radial-gradient(ellipse_farthest-side_at_top_left,var(--color-brand)_0%,var(--color-brand)_64%,transparent_100%)]"
+        className="absolute top-0 left-0 h-[22rem] w-[34rem] max-w-full bg-[radial-gradient(ellipse_farthest-side_at_top_left,var(--color-brand)_0%,var(--color-brand)_55%,transparent_100%)]"
       />
       <svg
         aria-hidden="true"
         viewBox="0 0 120 130"
-        className="drift absolute right-[3.5rem] bottom-3 hidden h-[8.5rem] w-[8rem] panel:block"
+        className="drift absolute right-[11rem] bottom-5 hidden h-[8.5rem] w-[8rem] panel:block"
       >
         <defs>
           <linearGradient id="dollar-facet" x1="0" y1="0" x2="1" y2="1">
@@ -64,22 +61,27 @@ export function Hero({ cycle }: { cycle: Cycle }) {
 
         <div
           style={{ gridArea: 'crew' }}
-          className="hidden items-end justify-center self-end md:flex panel:-mr-[2.5rem] panel:-mb-[1.5rem] panel:justify-end"
+          className="hidden items-end justify-center self-end md:flex panel:-mr-[0.5rem] panel:justify-end"
         >
-          <Mascot look={HOST_LOOKS.him} pose="stand" shirt={SOLAR_SHIRT} className="h-44 w-auto shrink-0 panel:h-[15.5rem]" />
-          <Mascot look={HOST_LOOKS.her} pose="stand" shirt={SOLAR_SHIRT} className="-ml-12 hidden h-40 w-auto shrink-0 wide:block panel:-ml-[6rem] panel:h-[14.5rem]" />
+          <img
+            src="/hero/mascotes-esquerda.webp"
+            alt=""
+            width={1030}
+            height={720}
+            className="h-auto w-full max-w-[17rem] shrink-0 panel:w-[20rem] panel:max-w-none"
+          />
         </div>
 
-        <h1 style={{ gridArea: 'title' }} className="mx-auto w-full max-w-[30rem]">
+        <h1 style={{ gridArea: 'title' }} className="relative z-[1] mx-auto w-full max-w-[30rem]">
           <span className="sr-only">Corrida da Quebra de Preços Catarinna&apos;s: dashboard de gamificação</span>
           <TitleLockup className="block w-full overflow-visible" />
         </h1>
 
         <div
           style={{ gridArea: 'runner' }}
-          className="hidden justify-center self-end md:flex panel:-mb-[1rem]"
+          className="hidden justify-center self-end md:flex"
         >
-          <Mascot look={HOST_LOOKS.runner} shirt={FRIDAY_SHIRT} className="h-44 w-auto panel:h-[16.5rem]" />
+          <HeroRunner />
         </div>
 
         <div

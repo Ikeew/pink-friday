@@ -99,22 +99,8 @@ function RunningLegs() {
   );
 }
 
-function StandingLegs() {
-  return (
-    <>
-      <path d="M94 150L90 194" stroke={PANTS} strokeWidth="19" strokeLinecap="round" />
-      <path d="M118 150L122 194" stroke={PANTS} strokeWidth="19" strokeLinecap="round" />
-      <Shoe d="M78 196Q90 190 100 196L100 206H70Q70 200 78 196Z" />
-      <Shoe d="M112 196Q124 190 134 196Q142 200 142 206H112Z" />
-    </>
-  );
-}
-
 interface MascotProps {
   look: Look;
-  pose?: 'run' | 'stand';
-  /** Estampa da camiseta; só vale em tamanhos maiores, onde o texto é legível. */
-  shirt?: readonly [string, string];
   crown?: boolean;
   className?: string;
 }
@@ -142,27 +128,19 @@ export function CrownBadge({ className, style }: { className?: string; style?: C
   );
 }
 
-/** Personagem vetorial com marreta. A pose `run` tem animação contínua de corrida. */
-export const Mascot = memo(function Mascot({ look, pose = 'run', shirt, crown, className }: MascotProps) {
-  const running = pose === 'run';
-
+/** Personagem vetorial com marreta, para quem ainda não tem arte, em animação contínua de corrida. */
+export const Mascot = memo(function Mascot({ look, crown, className }: MascotProps) {
   return (
     <svg aria-hidden="true" viewBox="0 0 200 210" className={`overflow-visible ${className ?? ''}`}>
-      <g className={running ? 'run-body' : undefined}>
-        <g className={running ? 'run-limb-a' : undefined} style={ARM_ORIGIN}>
+      <g className="run-body">
+        <g className="run-limb-a" style={ARM_ORIGIN}>
           <path d="M124 112Q146 120 152 102" fill="none" stroke={look.skin} strokeWidth="11" strokeLinecap="round" />
           <path d="M124 112Q134 117 140 116" fill="none" stroke={SHIRT_SHADE} strokeWidth="14" strokeLinecap="round" />
         </g>
-        {running ? <RunningLegs /> : <StandingLegs />}
+        <RunningLegs />
         <Hammer />
         <path d="M84 104Q104 94 128 104Q134 128 128 152Q104 160 84 152Q78 128 84 104Z" fill={SHIRT} />
         <path d="M118 100Q124 102 128 104Q134 128 128 152Q122 155 116 156Q124 128 118 100Z" fill={SHIRT_SHADE} />
-        {shirt && (
-          <g fontFamily="var(--font-display)" fontStyle="italic" fontWeight="800" textAnchor="middle">
-            <text x="108" y="132" fontSize="12" fill="#FFC629">{shirt[0]}</text>
-            <text x="108" y="143" fontSize="9.5" fill="#FFFFFF">{shirt[1]}</text>
-          </g>
-        )}
         <path d="M94 112Q78 122 72 100" fill="none" stroke={look.skin} strokeWidth="11" strokeLinecap="round" />
         <path d="M94 112Q86 117 82 114" fill="none" stroke={SHIRT} strokeWidth="14" strokeLinecap="round" />
         <circle cx="71" cy="96" r="7.5" fill={look.skin} />
