@@ -65,8 +65,7 @@ export function toTeamRunner(rawName: string): Seller {
   return { id: `equipe:${name}`, name: teamName(name), look: generatedLook(name), sprite: teamSprites[name] };
 }
 
-/** SDR como corredor da pista; ainda sem figurinha, usa o mascote vetorial. */
+/** SDR como corredor da pista: usa a figurinha de `profiles`, se houver, ou o mascote vetorial. */
 export function toSdrRunner(rawName: string): Seller {
-  const name = rawName.trim();
-  return { id: `sdr:${name}`, name: shortName(name), look: generatedLook(name) };
+  return { ...toSeller(rawName), id: `sdr:${rawName.trim()}` };
 }

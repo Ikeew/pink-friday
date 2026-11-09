@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 import type { SellerHighlight } from '../hooks/useSellerHighlight';
-import { formatCurrency, formatPercent } from '../lib/format';
+import { formatCurrency, formatGoalStatus } from '../lib/format';
 import type { LaneRow, Sprite } from '../types';
 import { CrownBadge, Mascot } from './art/Mascot';
 import { RankBadge } from './SellerBadges';
@@ -23,10 +23,27 @@ function Stat({ row, onDark = false, compact = false, className = '' }: StatProp
       <span className={`block text-2xl font-bold ${compact ? 'wide:text-[1.65rem]' : 'wide:text-[2.1rem]'} ${onDark ? 'text-gold' : 'text-ink'}`}>
         {formatCurrency(row.amount)}
       </span>
-      <span className={`mt-0.5 block text-base font-medium ${compact ? 'wide:text-[1rem]' : 'wide:text-[1.2rem]'} ${onDark ? 'text-white' : 'text-ink-soft'}`}>
-        {formatPercent(row.share)} do total
-      </span>
+      {row.attainment !== null && (
+        <span className={`mt-0.5 block text-base font-medium ${compact ? 'wide:text-[1rem]' : 'wide:text-[1.2rem]'} ${onDark ? 'text-white' : 'text-ink-soft'}`}>
+          {formatGoalStatus(row.attainment)}
+        </span>
+      )}
     </p>
+  );
+}
+
+/** Selo "Meta batida", colado no canto do valor de quem atingiu a meta. */
+function GoalStamp({ className = '' }: { className?: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`pointer-events-none absolute z-[1] flex -rotate-6 items-center gap-1 rounded-md border-2 border-white bg-gradient-to-b from-[#FFE27A] to-gold px-1.5 font-display leading-tight font-extrabold whitespace-nowrap text-plum uppercase italic shadow-card ${className}`}
+    >
+      <svg viewBox="0 0 24 24" className="size-[1em] shrink-0" fill="currentColor">
+        <path d="M12 2.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5-4.9-4.5 6.6-.8z" />
+      </svg>
+      Meta batida
+    </span>
   );
 }
 
@@ -92,7 +109,10 @@ export function RaceLane({ row, progress, highlight, dense = false }: RaceLanePr
         {seller.name}
         <TeamTag team={row.team} className="ml-1.5 text-sm" />
       </p>
-      <Stat row={row} className="pr-2 text-right wide:hidden" />
+      <div className="relative pr-2 text-right wide:hidden">
+        {row.reachedGoal && <GoalStamp className="-top-4 right-1 text-[0.7rem]" />}
+        <Stat row={row} />
+      </div>
 
       <div
         className={`relative col-span-full h-[4.25rem] wide:h-full wide:flex-1 ${
@@ -142,6 +162,12 @@ export function RaceLane({ row, progress, highlight, dense = false }: RaceLanePr
               row.reachedGoal ? 'bg-plum shadow-card' : 'bg-white/95'
             } ${flipLabel ? 'left-0 -translate-x-[calc(100%+5.75rem)]' : 'left-2'}`}
           >
+            {row.reachedGoal && (
+              // Quem bateu a meta está na chegada, com o valor à esquerda; o selo fica do lado livre.
+              <GoalStamp
+                className={`top-1/2 right-full mr-2 -translate-y-1/2 ${dense ? 'text-[0.95rem]' : 'text-[1.15rem]'}`}
+              />
+            )}
             <Stat row={row} onDark={row.reachedGoal} compact={dense} />
           </div>
         </div>
@@ -151,7 +177,9 @@ export function RaceLane({ row, progress, highlight, dense = false }: RaceLanePr
       <button
         type="button"
         aria-pressed={highlight.pinnedId === seller.id}
-        aria-label={`${rank}º lugar, ${seller.name}: ${formatCurrency(row.amount)}, ${formatPercent(row.share)} do total. ${row.note}.`}
+        aria-label={`${rank}º lugar, ${seller.name}: ${formatCurrency(row.amount)}${
+          row.attainment !== null ? `, ${formatGoalStatus(row.attainment)}` : ''
+        }${row.reachedGoal ? ', meta batida' : ''}. ${row.note}.`}
         {...highlight.bind(seller.id)}
         className="absolute inset-0 z-[4] cursor-pointer rounded-xl outline-none transition-all duration-300 ease-premium focus-visible:outline-3 focus-visible:-outline-offset-3 focus-visible:outline-brand"
       />

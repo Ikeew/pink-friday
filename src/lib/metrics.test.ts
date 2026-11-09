@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { parseBrl, todayInSaoPaulo } from '../../server/groner';
 import type { Cycle, DashboardData } from '../types';
-import { formatPeriod } from './format';
+import { formatGoalStatus, formatPeriod } from './format';
 import { buildCycleView } from './metrics';
 import { shortName, titleCase } from './people';
 
@@ -35,7 +35,7 @@ describe('buildCycleView', () => {
     expect(view.salesCount).toBe(12);
     expect(view.boards[0]?.rows).toHaveLength(5);
     expect(view.boards[1]?.rows.map((row) => row.rank)).toEqual([6]);
-    expect(view.boards[0]?.rows[0]?.share).toBe(0.4);
+    expect(view.boards[0]?.rows[0]?.attainment).toBeNull();
   });
 
   it('sem meta individual, posiciona a pista em proporção ao líder', () => {
@@ -110,6 +110,15 @@ describe('servidor', () => {
 
   it('calcula "hoje" no fuso de São Paulo', () => {
     expect(todayInSaoPaulo(new Date('2026-11-06T01:30:00Z'))).toBe('2026-11-05');
+  });
+});
+
+describe('formatGoalStatus', () => {
+  it('mostra o percentual da meta para quem bateu e o que falta para quem não bateu', () => {
+    expect(formatGoalStatus(1.5)).toBe('150% da meta');
+    expect(formatGoalStatus(1)).toBe('100% da meta');
+    expect(formatGoalStatus(0.77)).toBe('faltam 23% para a meta');
+    expect(formatGoalStatus(0.999)).toBe('faltam 1% para a meta');
   });
 });
 

@@ -39,8 +39,7 @@ JOIN Leads l ON l.id = v.leadid
 JOIN usuarios u ON l.PreVendedorId = u.id
 WHERE v.Excluido = 0
   AND (
-      u.Nome LIKE '%Kelly Moreira%'
-      OR u.Nome LIKE '%Camila Lopes%'
+      u.Nome LIKE '%Camila Lopes%'
       OR u.Nome LIKE '%Filipe Correa%'
       OR u.Nome LIKE '%ERICA GOMES%'
       OR u.Nome LIKE 'GISA%'

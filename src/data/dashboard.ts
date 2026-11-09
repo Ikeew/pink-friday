@@ -20,12 +20,14 @@ export const BOARD_ROTATION_MS = 1 * 60_000;
 const SELLER_TARGET = 100_000;
 /** Meta de cada equipe no ciclo. */
 const TEAM_TARGET = 450_000;
+/** Meta de cada SDR no ciclo. */
+const SDR_TARGET = 150_000;
 
 export const cycles: Cycle[] = [
-  { id: 'ciclo-1', label: 'Ciclo 1', start: '2026-11-01', end: '2026-11-10', target: 2_100_000, sellerTarget: SELLER_TARGET, teamTarget: TEAM_TARGET },
-  { id: 'ciclo-2', label: 'Ciclo 2', start: '2026-10-10', end: '2026-10-20', target: 2_100_000, sellerTarget: SELLER_TARGET, teamTarget: TEAM_TARGET },
+  { id: 'ciclo-1', label: 'Ciclo 1', start: '2026-11-01', end: '2026-11-10', target: 2_100_000, sellerTarget: SELLER_TARGET, teamTarget: TEAM_TARGET, sdrTarget: SDR_TARGET },
+  { id: 'ciclo-2', label: 'Ciclo 2', start: '2026-10-10', end: '2026-10-20', target: 2_100_000, sellerTarget: SELLER_TARGET, teamTarget: TEAM_TARGET, sdrTarget: SDR_TARGET },
   // PLACEHOLDER: datas e meta do Ciclo 3 são provisórias.
-  { id: 'ciclo-3', label: 'Ciclo 3', start: '2026-10-21', end: '2026-10-31', target: 3_200_000, sellerTarget: SELLER_TARGET, teamTarget: TEAM_TARGET },
+  { id: 'ciclo-3', label: 'Ciclo 3', start: '2026-10-21', end: '2026-10-31', target: 3_200_000, sellerTarget: SELLER_TARGET, teamTarget: TEAM_TARGET, sdrTarget: SDR_TARGET },
 ];
 
 /** Personagem em `public/avatars/<nome>.webp`. */
@@ -47,6 +49,14 @@ export const profiles: Record<string, { look?: Look; sprite?: Sprite }> = {
   'LUCAS MACHADO': avatar('lucas', 0.779, 57.5, 0, 34),
   'RICARDO MOTA': avatar('ricardo', 0.902, 51, 0, 32),
   'FERNANDO FRANÇA': avatar('fernando', 0.909, 53.9, 0, 32),
+  'OTAVIO AUGUSTO': avatar('otavio', 0.962, 59.8, 0.8, 32),
+  'GESIEL DEOCLIDES': avatar('gesiel', 0.959, 64.1, 1.2, 32),
+  // SDRs
+  'CAMILA LOPES': avatar('camila', 0.966, 55.7, 0.8, 32),
+  'FILIPE CORREA': avatar('filipe', 0.964, 59.3, 1, 32),
+  'KETLY SANTOS': avatar('ketly', 0.959, 54.7, 0.9, 32),
+  'ERICA GOMES NOVO': avatar('erica', 0.969, 54.3, 1.6, 32),
+  'GISA ALVES': avatar('gisa', 0.963, 53.5, 0.8, 32),
 };
 
 /** Figurinha em `public/teams/<nome>.webp`, com a coroa no alto, ao centro. */

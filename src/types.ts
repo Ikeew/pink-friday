@@ -42,6 +42,8 @@ export interface Cycle {
   sellerTarget?: number;
   /** Meta de cada equipe. */
   teamTarget?: number;
+  /** Meta de cada SDR. */
+  sdrTarget?: number;
 }
 
 export interface RankedAmount {
@@ -82,8 +84,8 @@ export interface LaneRow {
   team: string;
   rank: number;
   amount: number;
-  /** Participação no total realizado do ciclo (0–1). */
-  share: number;
+  /** Valor ÷ meta individual, sem limite (1,5 = 150%); `null` sem meta. */
+  attainment: number | null;
   /** Posição na pista (0–1). */
   progress: number;
   /** Atingiu a meta individual do ciclo. */

@@ -32,7 +32,6 @@ interface LaneOptions {
   leaderAmount: number;
   /** Posição do primeiro corredor da tela no ranking completo, menos 1. */
   rankOffset: number;
-  realized: number;
 }
 
 function salesCount(count: number | undefined) {
@@ -53,7 +52,7 @@ function laneNote(entry: LaneEntry, rank: number, { target, leaderAmount }: Lane
 }
 
 function buildLanes(entries: LaneEntry[], options: LaneOptions): LaneRow[] {
-  const { target, leaderAmount, rankOffset, realized } = options;
+  const { target, leaderAmount, rankOffset } = options;
   const scale = target ?? leaderAmount / LEADER_POSITION;
 
   return entries.map((entry, index) => {
@@ -63,7 +62,7 @@ function buildLanes(entries: LaneEntry[], options: LaneOptions): LaneRow[] {
       team: entry.team,
       rank,
       amount: entry.amount,
-      share: realized > 0 ? entry.amount / realized : 0,
+      attainment: target ? entry.amount / target : null,
       progress: scale > 0 ? clamp01(entry.amount / scale) : 0,
       reachedGoal: target !== undefined && entry.amount >= target,
       note: laneNote(entry, rank, options),
@@ -75,7 +74,7 @@ function buildLanes(entries: LaneEntry[], options: LaneOptions): LaneRow[] {
  * Telas que se revezam na pista: vendedores em páginas de 5, depois equipes e SDRs.
  * Telas sem ninguém ficam de fora; a primeira sempre existe, para o estado de carregamento.
  */
-function buildBoards(cycle: Cycle, data: DashboardData | null, realized: number): RaceBoardPage[] {
+function buildBoards(cycle: Cycle, data: DashboardData | null): RaceBoardPage[] {
   const sellers = data?.sellers ?? [];
   const leader = sellers[0]?.amount ?? 0;
   const boards: RaceBoardPage[] = [];
@@ -90,7 +89,7 @@ function buildBoards(cycle: Cycle, data: DashboardData | null, realized: number)
       title: `Vendedores do ${from + 1}º ao ${from + RACE_SIZE}º lugar`,
       rows: buildLanes(
         slice.map((sales) => ({ runner: toSeller(sales.name), team: teamName(sales.team), amount: sales.amount, count: sales.count })),
-        { target: cycle.sellerTarget, leaderAmount: leader, rankOffset: from, realized },
+        { target: cycle.sellerTarget, leaderAmount: leader, rankOffset: from },
       ),
     });
   }
@@ -104,13 +103,13 @@ function buildBoards(cycle: Cycle, data: DashboardData | null, realized: number)
       title,
       rows: buildLanes(
         top.map((entry) => ({ runner: toRunner(entry.name), team: '', amount: entry.amount, count: entry.count })),
-        { target, leaderAmount: top[0]?.amount ?? 0, rankOffset: 0, realized },
+        { target, leaderAmount: top[0]?.amount ?? 0, rankOffset: 0 },
       ),
     });
   };
 
   group('equipes', 'Equipes', 'Corrida das equipes', data?.teams ?? [], toTeamRunner, cycle.teamTarget);
-  group('sdrs', 'SDRs', 'Corrida das SDRs', data?.sdrs ?? [], toSdrRunner);
+  group('sdrs', 'SDRs', 'Corrida das SDRs', data?.sdrs ?? [], toSdrRunner, cycle.sdrTarget);
 
   return boards;
 }
@@ -139,7 +138,7 @@ export function buildCycleView(cycle: Cycle, data: DashboardData | null): CycleV
     averageTicket: data?.averageTicket ?? 0,
     salesCount: sellers.reduce((sum, sales) => sum + sales.count, 0),
     salesToday: data?.salesToday ?? 0,
-    boards: buildBoards(cycle, data, realized),
+    boards: buildBoards(cycle, data),
     teams: buildRanking(data?.teams ?? [], false),
     sdrs: buildRanking(data?.sdrs ?? [], true),
   };
