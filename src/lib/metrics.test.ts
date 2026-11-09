@@ -79,10 +79,27 @@ describe('revezamento da pista', () => {
     expect(view.boards[1]?.rows[0]?.note).toContain('da meta');
     const team = view.boards[2]?.rows[0];
     expect(team?.seller.name).toBe('Elite');
-    expect(team?.team).toBe('');
     expect(team?.reachedGoal).toBe(true);
     // SDRs não têm meta: a pista fica proporcional à líder.
     expect(view.boards[3]?.rows[0]?.progress).toBeCloseTo(0.7);
+  });
+
+  it('equipes com meta própria correm pelo percentual da meta', () => {
+    const teams = {
+      ...data,
+      teams: [
+        { name: 'EQUIPE A', amount: 300_000 },
+        { name: 'EQUIPE B', amount: 200_000 },
+      ],
+    };
+    const view = buildCycleView({ ...cycle, teamTargets: { 'EQUIPE A': 400_000, 'EQUIPE B': 200_000 } }, teams);
+    const rows = view.boards.find((board) => board.id === 'equipes')?.rows ?? [];
+
+    // B vendeu menos, mas bateu 100% da meta; A está em 75%.
+    expect(rows.map((row) => row.seller.name)).toEqual(['B', 'A']);
+    expect(rows.map((row) => row.attainment)).toEqual([1, 0.75]);
+    expect(rows[0]?.reachedGoal).toBe(true);
+    expect(rows[1]?.progress).toBe(0.75);
   });
 
   it('sem dados, mostra só a primeira tela, vazia', () => {

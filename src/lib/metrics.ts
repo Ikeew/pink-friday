@@ -18,15 +18,20 @@ const RANKING_SIZE = 5;
 
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 
+/** Valor ÷ meta; sem meta, o próprio valor (só para ordenar). */
+const attainmentOf = (entry: { amount: number; target?: number }) =>
+  entry.target ? entry.amount / entry.target : entry.amount;
+
 interface LaneEntry {
   runner: Seller;
-  team: string;
   amount: number;
   count?: number;
+  /** Meta própria deste corredor; sem ela, vale a meta comum da tela. */
+  target?: number;
 }
 
 interface LaneOptions {
-  /** Meta de cada corredor; sem ela, a pista é proporcional ao primeiro colocado. */
+  /** Meta comum da tela; sem meta, a pista é proporcional ao primeiro colocado. */
   target: number | undefined;
   /** Valor do primeiro colocado do ranking completo, não só desta tela. */
   leaderAmount: number;
@@ -38,7 +43,7 @@ function salesCount(count: number | undefined) {
   return count === undefined ? '' : `${count} ${count === 1 ? 'venda' : 'vendas'}`;
 }
 
-function laneNote(entry: LaneEntry, rank: number, { target, leaderAmount }: LaneOptions) {
+function laneNote(entry: LaneEntry, rank: number, target: number | undefined, leaderAmount: number) {
   if (target !== undefined && entry.amount >= target) {
     return `Meta batida · ${formatCurrency(entry.amount - target)} acima`;
   }
@@ -52,20 +57,20 @@ function laneNote(entry: LaneEntry, rank: number, { target, leaderAmount }: Lane
 }
 
 function buildLanes(entries: LaneEntry[], options: LaneOptions): LaneRow[] {
-  const { target, leaderAmount, rankOffset } = options;
-  const scale = target ?? leaderAmount / LEADER_POSITION;
+  const { leaderAmount, rankOffset } = options;
 
   return entries.map((entry, index) => {
     const rank = rankOffset + index + 1;
+    const target = entry.target ?? options.target;
+    const scale = target ?? leaderAmount / LEADER_POSITION;
     return {
       seller: entry.runner,
-      team: entry.team,
       rank,
       amount: entry.amount,
       attainment: target ? entry.amount / target : null,
       progress: scale > 0 ? clamp01(entry.amount / scale) : 0,
       reachedGoal: target !== undefined && entry.amount >= target,
-      note: laneNote(entry, rank, options),
+      note: laneNote(entry, rank, target, leaderAmount),
     };
   });
 }
@@ -88,28 +93,36 @@ function buildBoards(cycle: Cycle, data: DashboardData | null): RaceBoardPage[] 
       label: `${from + 1}º–${from + RACE_SIZE}º`,
       title: `Vendedores do ${from + 1}º ao ${from + RACE_SIZE}º lugar`,
       rows: buildLanes(
-        slice.map((sales) => ({ runner: toSeller(sales.name), team: teamName(sales.team), amount: sales.amount, count: sales.count })),
+        slice.map((sales) => ({ runner: toSeller(sales.name), amount: sales.amount, count: sales.count })),
         { target: cycle.sellerTarget, leaderAmount: leader, rankOffset: from },
       ),
     });
   }
 
-  const group = (id: string, label: string, title: string, entries: RankedAmount[], toRunner: (name: string) => Seller, target?: number) => {
+  const group = (id: string, label: string, title: string, entries: LaneEntry[], target?: number) => {
     const top = entries.slice(0, GROUP_RACE_SIZE);
     if (top.length === 0) return;
     boards.push({
       id,
       label,
       title,
-      rows: buildLanes(
-        top.map((entry) => ({ runner: toRunner(entry.name), team: '', amount: entry.amount, count: entry.count })),
-        { target, leaderAmount: top[0]?.amount ?? 0, rankOffset: 0 },
-      ),
+      rows: buildLanes(top, { target, leaderAmount: top[0]?.amount ?? 0, rankOffset: 0 }),
     });
   };
 
-  group('equipes', 'Equipes', 'Corrida das equipes', data?.teams ?? [], toTeamRunner, cycle.teamTarget);
-  group('sdrs', 'SDRs', 'Corrida das SDRs', data?.sdrs ?? [], toSdrRunner, cycle.sdrTarget);
+  // Cada equipe tem meta própria, então a corrida é pelo % da meta, não pelo valor.
+  const teams = (data?.teams ?? [])
+    .map((entry) => ({
+      runner: toTeamRunner(entry.name),
+      amount: entry.amount,
+      count: entry.count,
+      target: cycle.teamTargets?.[entry.name.trim()] ?? cycle.teamTarget,
+    }))
+    .sort((a, b) => attainmentOf(b) - attainmentOf(a) || b.amount - a.amount);
+  group('equipes', 'Equipes', 'Corrida das equipes, pelo percentual da meta', teams, cycle.teamTarget);
+
+  const sdrs = (data?.sdrs ?? []).map((entry) => ({ runner: toSdrRunner(entry.name), amount: entry.amount, count: entry.count }));
+  group('sdrs', 'SDRs', 'Corrida das SDRs', sdrs, cycle.sdrTarget);
 
   return boards;
 }

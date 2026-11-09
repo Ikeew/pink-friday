@@ -25,6 +25,8 @@
   --color-brand-deep: #a8005a;
   --color-plum: #4a0730;
   --color-plum-soft: #7b0e50;
+  /* Barra de progresso da pista. */
+  --color-bordo: #800020;
   --color-gold: #ffc629;
   --color-gold-soft: #fff0bd;
   --color-ink: #1f1a2e;

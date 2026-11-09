@@ -40,8 +40,10 @@ export interface Cycle {
   target: number;
   /** Meta de cada vendedor. Sem ela, a pista é proporcional ao líder do ciclo. */
   sellerTarget?: number;
-  /** Meta de cada equipe. */
+  /** Meta de cada equipe, para quem não estiver em `teamTargets`. */
   teamTarget?: number;
+  /** Meta individual por equipe, pelo nome exato da API. */
+  teamTargets?: Record<string, number>;
   /** Meta de cada SDR. */
   sdrTarget?: number;
 }
@@ -80,8 +82,6 @@ export interface DashboardData {
 
 export interface LaneRow {
   seller: Seller;
-  /** Equipe do vendedor, sem o prefixo "Equipe"; vazio para equipes e SDRs. */
-  team: string;
   rank: number;
   amount: number;
   /** Valor ÷ meta individual, sem limite (1,5 = 150%); `null` sem meta. */
