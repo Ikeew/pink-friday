@@ -66,10 +66,10 @@ function teamSticker(name: string, aspect: number) {
 
 /** Figurinha de cada equipe, pelo nome exato que vem da API. */
 export const teamSprites: Record<string, Sprite> = {
-  'EQUIPE ELITE': teamSticker('elite', 1.002),
-  'EQUIPE GERAÇÃO': teamSticker('geracao', 1.06),
-  'EQUIPE PERFORMANCE': teamSticker('performance', 0.788),
-  'EQUIPE SINERGIA': teamSticker('sinergia', 0.962),
+  'EQUIPE ELITE': teamSticker('elite', 0.976),
+  'EQUIPE GERAÇÃO': teamSticker('geracao', 1.062),
+  'EQUIPE PERFORMANCE': teamSticker('performance', 0.987),
+  'EQUIPE SINERGIA': teamSticker('sinergia', 1.035),
   'EQUIPE DREAM': teamSticker('dream', 0.959),
-  'EQUIPE PREDADORES': teamSticker('predadores', 1.044),
+  'EQUIPE PREDADORES': teamSticker('predadores', 1.001),
 };
