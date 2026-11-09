@@ -10,21 +10,19 @@ const FLIP_LABEL_AT = 0.72;
 
 interface StatProps {
   row: LaneRow;
-  /** Texto claro, para o fundo escuro de quem bateu a meta. */
-  onDark?: boolean;
   /** Versão menor, para as raias mais baixas. */
   compact?: boolean;
   className?: string;
 }
 
-function Stat({ row, onDark = false, compact = false, className = '' }: StatProps) {
+function Stat({ row, compact = false, className = '' }: StatProps) {
   return (
     <p className={`font-display leading-none whitespace-nowrap ${className}`}>
-      <span className={`block text-2xl font-bold ${compact ? 'wide:text-[1.65rem]' : 'wide:text-[2.1rem]'} ${onDark ? 'text-gold' : 'text-ink'}`}>
+      <span className={`block text-2xl font-bold ${compact ? 'wide:text-[1.65rem]' : 'wide:text-[2.1rem]'} text-ink`}>
         {formatCurrency(row.amount)}
       </span>
       {row.attainment !== null && (
-        <span className={`mt-0.5 block text-base font-medium ${compact ? 'wide:text-[1rem]' : 'wide:text-[1.2rem]'} ${onDark ? 'text-white' : 'text-ink-soft'}`}>
+        <span className={`mt-0.5 block text-base font-medium ${compact ? 'wide:text-[1rem]' : 'wide:text-[1.2rem]'} text-ink-soft`}>
           {formatGoalStatus(row.attainment)}
         </span>
       )}
@@ -123,7 +121,7 @@ export function RaceLane({ row, progress, highlight, dense = false }: RaceLanePr
         <div className="absolute inset-x-0 bottom-2.5 h-3 overflow-hidden rounded-r-full bg-white/70 wide:-left-3 wide:bottom-3 wide:h-3.5">
           <div
             className={`lane-fill size-full rounded-r-full bg-gradient-to-r ${
-              row.reachedGoal ? 'from-plum-soft via-plum to-plum' : 'from-brand-bright/70 via-brand to-brand'
+              'from-brand-bright/70 via-brand to-brand'
             }`}
           />
         </div>
@@ -151,16 +149,32 @@ export function RaceLane({ row, progress, highlight, dense = false }: RaceLanePr
               dense ? 'wide:h-[4.5rem]' : 'wide:h-[5.5rem]'
             }`}
           >
-            {seller.sprite ? (
-              <SpriteRunner sprite={seller.sprite} crown={row.reachedGoal} />
-            ) : (
-              <Mascot look={seller.look} crown={row.reachedGoal} className="size-full" />
+            {/* Quem bateu a meta ganha brilho dourado e coroa. */}
+            {row.reachedGoal && (
+              <span
+                aria-hidden="true"
+                className="absolute -inset-x-[30%] -top-[5%] -bottom-[15%] rounded-full bg-[radial-gradient(closest-side,rgb(255_198_41/0.75),rgb(255_198_41/0.3)_55%,transparent)]"
+              />
             )}
+            {/* Todos os personagens 10% maiores na tela larga; no celular, o tamanho normal não cobre o texto. */}
+            <div className="relative size-full origin-bottom wide:scale-110">
+              {seller.sprite ? (
+                <SpriteRunner sprite={seller.sprite} crown={row.reachedGoal} />
+              ) : (
+                <Mascot look={seller.look} crown={row.reachedGoal} className="size-full" />
+              )}
+            </div>
           </div>
+        </div>
+
+        {/* Valor numa camada própria, acima de todos os personagens: o da raia de baixo não cobre o texto. */}
+        <div className="lane-runner pointer-events-none absolute inset-0 z-[3]">
           <div
             className={`absolute top-1/2 hidden rounded-lg px-2 wide:block ${dense ? '-translate-y-[58%] py-0.5' : '-translate-y-[62%] py-1'} ${
-              row.reachedGoal ? 'bg-plum shadow-card' : 'bg-white/95'
-            } ${flipLabel ? 'left-0 -translate-x-[calc(100%+5.75rem)]' : 'left-2'}`}
+              row.reachedGoal ? 'bg-white shadow-card' : 'bg-white/95'
+            } ${
+              flipLabel ? 'left-0 -translate-x-[calc(100%+6rem)]' : 'left-2'
+            }`}
           >
             {row.reachedGoal && (
               // Quem bateu a meta está na chegada, com o valor à esquerda; o selo fica do lado livre.
@@ -168,7 +182,7 @@ export function RaceLane({ row, progress, highlight, dense = false }: RaceLanePr
                 className={`top-1/2 right-full mr-2 -translate-y-1/2 ${dense ? 'text-[0.95rem]' : 'text-[1.15rem]'}`}
               />
             )}
-            <Stat row={row} onDark={row.reachedGoal} compact={dense} />
+            <Stat row={row} compact={dense} />
           </div>
         </div>
       </div>
