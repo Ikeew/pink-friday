@@ -46,7 +46,7 @@ WHERE v.Excluido = 0
   AND (
       u.Nome LIKE '%Kelly Moreira%'
       OR u.Nome LIKE '%Camila Lopes%'
-      OR u.Nome LIKE '%Filipe Gonçalves Correa%'
+      OR u.Nome LIKE '%Filipe Correa%'
       OR u.Nome LIKE '%ERICA GOMES%'
       OR u.Nome LIKE 'GISA%'
       OR u.Nome LIKE 'KETLY%'
