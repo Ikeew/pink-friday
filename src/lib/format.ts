@@ -16,10 +16,12 @@ export const formatPercent = (ratio: number) => `${Math.round(ratio * 100)}%`;
  * "faltam 23% para a meta" para quem não bateu. Arredonda o que falta para cima,
  * para nunca dizer "faltam 0%" a quem ainda não chegou.
  */
-export function formatGoalStatus(attainment: number) {
-  if (attainment >= 1) return `${Math.floor(attainment * 100)}% da meta`;
-  return `faltam ${Math.max(1, Math.ceil((1 - attainment) * 100))}% para a meta`;
+export function goalStatusParts(attainment: number): [string, string] {
+  if (attainment >= 1) return [`${Math.floor(attainment * 100)}%`, 'da meta'];
+  return [`faltam ${Math.max(1, Math.ceil((1 - attainment) * 100))}%`, 'para a meta'];
 }
+
+export const formatGoalStatus = (attainment: number) => goalStatusParts(attainment).join(' ');
 
 /** Lê a data ISO por partes para não sofrer deslocamento de fuso horário. */
 function parts(iso: string) {

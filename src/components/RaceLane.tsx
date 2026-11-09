@@ -1,12 +1,12 @@
 import type { CSSProperties } from 'react';
 import type { SellerHighlight } from '../hooks/useSellerHighlight';
-import { formatCurrency, formatGoalStatus } from '../lib/format';
+import { formatCurrency, formatGoalStatus, goalStatusParts } from '../lib/format';
 import type { LaneRow, Sprite } from '../types';
 import { CrownBadge, Mascot } from './art/Mascot';
 import { RankBadge } from './SellerBadges';
 
 /** Acima deste avanço não há espaço à direita do corredor, e o valor passa para a esquerda. */
-const FLIP_LABEL_AT = 0.72;
+const FLIP_LABEL_AT = 0.6;
 
 interface StatProps {
   row: LaneRow;
@@ -15,15 +15,25 @@ interface StatProps {
   className?: string;
 }
 
+/**
+ * Valor e situação na meta. No celular, em duas linhas. Na tela larga, numa linha só,
+ * com a situação em letra menor ao lado: o balão fica baixo e não alcança a faixa
+ * de baixo da raia, onde sobe a cabeça do personagem da raia seguinte.
+ */
 function Stat({ row, compact = false, className = '' }: StatProps) {
+  const status = row.attainment !== null ? goalStatusParts(row.attainment) : null;
   return (
-    <p className={`font-display leading-none whitespace-nowrap ${className}`}>
-      <span className={`block text-2xl font-bold ${compact ? 'wide:text-[1.65rem]' : 'wide:text-[2.1rem]'} text-ink`}>
+    <p className={`font-display whitespace-nowrap wide:flex wide:items-center wide:gap-1.5 ${className}`}>
+      <span className={`block text-2xl leading-none font-bold text-ink ${compact ? 'wide:text-[1.6rem]' : 'wide:text-[2rem]'}`}>
         {formatCurrency(row.amount)}
       </span>
-      {row.attainment !== null && (
-        <span className={`mt-0.5 block text-base font-medium ${compact ? 'wide:text-[1rem]' : 'wide:text-[1.2rem]'} text-ink-soft`}>
-          {formatGoalStatus(row.attainment)}
+      {status && (
+        <span
+          className={`mt-0.5 block text-base leading-none font-medium text-ink-soft wide:mt-0 wide:leading-[1.05] ${
+            compact ? 'wide:text-[0.8rem]' : 'wide:text-[0.95rem]'
+          }`}
+        >
+          <span className="wide:block">{status[0]}</span> <span className="wide:block">{status[1]}</span>
         </span>
       )}
     </p>
@@ -157,7 +167,7 @@ export function RaceLane({ row, progress, highlight, dense = false }: RaceLanePr
               />
             )}
             {/* Todos os personagens 10% maiores na tela larga; no celular, o tamanho normal não cobre o texto. */}
-            <div className="relative size-full origin-bottom wide:scale-110">
+            <div data-lane-sprite className="relative size-full origin-bottom wide:scale-110">
               {seller.sprite ? (
                 <SpriteRunner sprite={seller.sprite} crown={row.reachedGoal} />
               ) : (
@@ -170,7 +180,8 @@ export function RaceLane({ row, progress, highlight, dense = false }: RaceLanePr
         {/* Valor numa camada própria, acima de todos os personagens: o da raia de baixo não cobre o texto. */}
         <div className="lane-runner pointer-events-none absolute inset-0 z-[3]">
           <div
-            className={`absolute top-1/2 hidden rounded-lg px-2 wide:block ${dense ? '-translate-y-[58%] py-0.5' : '-translate-y-[62%] py-1'} ${
+            data-lane-label
+            className={`absolute top-0 hidden rounded-lg px-2 py-0.5 wide:block ${
               row.reachedGoal ? 'bg-white shadow-card' : 'bg-white/95'
             } ${
               flipLabel ? 'left-0 -translate-x-[calc(100%+6rem)]' : 'left-2'
