@@ -37,5 +37,5 @@ export const profiles: Record<string, { look?: Look; sprite?: Sprite }> = {
   'GABRIEL MORELI MACHADO OLIVEIRA': avatar('gabriel', 0.741, 63, -0.1, 34),
   'RHUAN PEREIRA': avatar('rhuan', 0.938, 70.8, 0, 34.3),
   'LUCAS MACHADO': avatar('lucas', 0.779, 57.5, 0, 34),
-  'RICARDO MOTA': avatar('ricardo', 0.781, 56.5, 0, 37),
+  'RICARDO MOTA': avatar('ricardo', 0.836, 50.5, 0, 34),
 };
