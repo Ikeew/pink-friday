@@ -12,16 +12,18 @@ interface StatProps {
   row: LaneRow;
   /** Texto claro, para o fundo escuro de quem bateu a meta. */
   onDark?: boolean;
+  /** Versão menor, para as raias mais baixas. */
+  compact?: boolean;
   className?: string;
 }
 
-function Stat({ row, onDark = false, className = '' }: StatProps) {
+function Stat({ row, onDark = false, compact = false, className = '' }: StatProps) {
   return (
     <p className={`font-display leading-none whitespace-nowrap ${className}`}>
-      <span className={`block text-2xl font-bold wide:text-[2.1rem] ${onDark ? 'text-gold' : 'text-ink'}`}>
+      <span className={`block text-2xl font-bold ${compact ? 'wide:text-[1.65rem]' : 'wide:text-[2.1rem]'} ${onDark ? 'text-gold' : 'text-ink'}`}>
         {formatCurrency(row.amount)}
       </span>
-      <span className={`mt-0.5 block text-base font-medium wide:text-[1.2rem] ${onDark ? 'text-white' : 'text-ink-soft'}`}>
+      <span className={`mt-0.5 block text-base font-medium ${compact ? 'wide:text-[1rem]' : 'wide:text-[1.2rem]'} ${onDark ? 'text-white' : 'text-ink-soft'}`}>
         {formatPercent(row.share)} do total
       </span>
     </p>
@@ -67,9 +69,11 @@ interface RaceLaneProps {
   /** 0 antes da animação de entrada; depois, o avanço real. */
   progress: number;
   highlight: SellerHighlight;
+  /** Raias mais baixas, para caber uma sexta. */
+  dense?: boolean;
 }
 
-export function RaceLane({ row, progress, highlight }: RaceLaneProps) {
+export function RaceLane({ row, progress, highlight, dense = false }: RaceLaneProps) {
   const { seller, rank } = row;
   const active = highlight.activeId === seller.id;
   const flipLabel = progress > FLIP_LABEL_AT;
@@ -90,7 +94,11 @@ export function RaceLane({ row, progress, highlight }: RaceLaneProps) {
       </p>
       <Stat row={row} className="pr-2 text-right wide:hidden" />
 
-      <div className="relative col-span-full h-[4.25rem] wide:h-full wide:min-h-[4rem] wide:flex-1">
+      <div
+        className={`relative col-span-full h-[4.25rem] wide:h-full wide:flex-1 ${
+          dense ? 'wide:min-h-[3.25rem]' : 'wide:min-h-[4rem]'
+        }`}
+      >
         {/* Trilho e preenchimento. */}
         <div className="absolute inset-x-0 bottom-2.5 h-3 overflow-hidden rounded-r-full bg-white/70 wide:-left-3 wide:bottom-3 wide:h-3.5">
           <div
@@ -101,7 +109,11 @@ export function RaceLane({ row, progress, highlight }: RaceLaneProps) {
         </div>
 
         <div className="absolute top-0 left-0 z-[3] flex max-w-full items-center gap-2 wide:top-1 wide:left-3">
-          <p className="hidden font-display text-[1.9rem] leading-tight font-semibold whitespace-nowrap text-ink wide:block">
+          <p
+            className={`hidden font-display leading-tight font-semibold whitespace-nowrap text-ink wide:block ${
+              dense ? 'text-[1.6rem]' : 'text-[1.9rem]'
+            }`}
+          >
             {seller.name}
             <TeamTag team={row.team} className="ml-2 text-[1.05rem]" />
           </p>
@@ -114,7 +126,11 @@ export function RaceLane({ row, progress, highlight }: RaceLaneProps) {
             <i className="dust block size-2.5 rounded-full bg-[#D8B6A6]" />
             <i className="dust block size-2 rounded-full bg-[#D8B6A6] [animation-delay:300ms]" />
           </span>
-          <div className="absolute bottom-1 -left-[4rem] h-[4.25rem] w-[4rem] origin-bottom transition-all duration-300 ease-premium group-hover:scale-110 wide:-left-[5.25rem] wide:h-[5.5rem] wide:w-[5.25rem]">
+          <div
+            className={`absolute bottom-1 -left-[4rem] h-[4.25rem] w-[4rem] origin-bottom transition-all duration-300 ease-premium group-hover:scale-110 wide:-left-[5.25rem] wide:w-[5.25rem] ${
+              dense ? 'wide:h-[4.5rem]' : 'wide:h-[5.5rem]'
+            }`}
+          >
             {seller.sprite ? (
               <SpriteRunner sprite={seller.sprite} crown={row.reachedGoal} />
             ) : (
@@ -122,11 +138,11 @@ export function RaceLane({ row, progress, highlight }: RaceLaneProps) {
             )}
           </div>
           <div
-            className={`absolute top-1/2 hidden -translate-y-[62%] rounded-lg px-2 py-1 wide:block ${
+            className={`absolute top-1/2 hidden rounded-lg px-2 wide:block ${dense ? '-translate-y-[58%] py-0.5' : '-translate-y-[62%] py-1'} ${
               row.reachedGoal ? 'bg-plum shadow-card' : 'bg-white/95'
             } ${flipLabel ? 'left-0 -translate-x-[calc(100%+5.75rem)]' : 'left-2'}`}
           >
-            <Stat row={row} onDark={row.reachedGoal} />
+            <Stat row={row} onDark={row.reachedGoal} compact={dense} />
           </div>
         </div>
       </div>

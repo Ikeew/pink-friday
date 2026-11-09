@@ -1,4 +1,4 @@
-import { profiles } from '../data/dashboard';
+import { profiles, teamSprites } from '../data/dashboard';
 import type { Look, Seller } from '../types';
 
 const CONNECTORS = new Set(['da', 'de', 'do', 'das', 'dos', 'e']);
@@ -52,4 +52,21 @@ export function toSeller(rawName: string): Seller {
     look: profile?.look ?? generatedLook(name),
     sprite: profile?.sprite,
   };
+}
+
+/** "EQUIPE ELITE" vira "Elite": o contexto já diz que é uma equipe. */
+export function teamName(raw: string) {
+  return titleCase(raw).replace(/^Equipe\s+/, '');
+}
+
+/** Equipe como corredor da pista, com a figurinha do time. */
+export function toTeamRunner(rawName: string): Seller {
+  const name = rawName.trim();
+  return { id: `equipe:${name}`, name: teamName(name), look: generatedLook(name), sprite: teamSprites[name] };
+}
+
+/** SDR como corredor da pista; ainda sem figurinha, usa o mascote vetorial. */
+export function toSdrRunner(rawName: string): Seller {
+  const name = rawName.trim();
+  return { id: `sdr:${name}`, name: shortName(name), look: generatedLook(name) };
 }

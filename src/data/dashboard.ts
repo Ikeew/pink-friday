@@ -7,17 +7,25 @@ import type { Cycle, Look, Sprite } from '../types';
 export const OVERALL_TARGET = 8_500_000;
 export const DEFAULT_CYCLE_ID = 'ciclo-1';
 
-/** Quantos vendedores correm na pista. */
+/** Quantos vendedores correm na pista em cada tela. */
 export const RACE_SIZE = 5;
+/** Telas de vendedores no revezamento: 1º ao 5º e 6º ao 10º. */
+export const SELLER_PAGES = 2;
+/** Equipes e SDRs correm todos juntos, até este limite. */
+export const GROUP_RACE_SIZE = 6;
+/** Tempo de cada tela da pista antes de passar para a próxima. */
+export const BOARD_ROTATION_MS = 3 * 60_000;
 
 /** Meta de cada vendedor no ciclo: quem chega nela ganha a coroa. */
 const SELLER_TARGET = 100_000;
+/** Meta de cada equipe no ciclo. */
+const TEAM_TARGET = 450_000;
 
 export const cycles: Cycle[] = [
-  { id: 'ciclo-1', label: 'Ciclo 1', start: '2026-11-01', end: '2026-11-10', target: 2_100_000, sellerTarget: SELLER_TARGET },
-  { id: 'ciclo-2', label: 'Ciclo 2', start: '2026-10-10', end: '2026-10-20', target: 2_100_000, sellerTarget: SELLER_TARGET },
+  { id: 'ciclo-1', label: 'Ciclo 1', start: '2026-11-01', end: '2026-11-10', target: 2_100_000, sellerTarget: SELLER_TARGET, teamTarget: TEAM_TARGET },
+  { id: 'ciclo-2', label: 'Ciclo 2', start: '2026-10-10', end: '2026-10-20', target: 2_100_000, sellerTarget: SELLER_TARGET, teamTarget: TEAM_TARGET },
   // PLACEHOLDER: datas e meta do Ciclo 3 são provisórias.
-  { id: 'ciclo-3', label: 'Ciclo 3', start: '2026-10-21', end: '2026-10-31', target: 3_200_000, sellerTarget: SELLER_TARGET },
+  { id: 'ciclo-3', label: 'Ciclo 3', start: '2026-10-21', end: '2026-10-31', target: 3_200_000, sellerTarget: SELLER_TARGET, teamTarget: TEAM_TARGET },
 ];
 
 /** Personagem em `public/avatars/<nome>.webp`. */
@@ -39,4 +47,19 @@ export const profiles: Record<string, { look?: Look; sprite?: Sprite }> = {
   'LUCAS MACHADO': avatar('lucas', 0.779, 57.5, 0, 34),
   'RICARDO MOTA': avatar('ricardo', 0.902, 51, 0, 32),
   'FERNANDO FRANÇA': avatar('fernando', 0.909, 53.9, 0, 32),
+};
+
+/** Figurinha em `public/teams/<nome>.webp`, com a coroa no alto, ao centro. */
+function teamSticker(name: string, aspect: number) {
+  return { src: `/teams/${name}.webp`, aspect, crownX: 50, crownY: 2, crownWidth: 30 };
+}
+
+/** Figurinha de cada equipe, pelo nome exato que vem da API. */
+export const teamSprites: Record<string, Sprite> = {
+  'EQUIPE ELITE': teamSticker('elite', 1.002),
+  'EQUIPE GERAÇÃO': teamSticker('geracao', 1.06),
+  'EQUIPE PERFORMANCE': teamSticker('performance', 0.788),
+  'EQUIPE SINERGIA': teamSticker('sinergia', 0.962),
+  'EQUIPE DREAM': teamSticker('dream', 0.959),
+  'EQUIPE PREDADORES': teamSticker('predadores', 1.044),
 };

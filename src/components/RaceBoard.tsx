@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
+import { BOARD_ROTATION_MS } from '../data/dashboard';
+import { useRotation } from '../hooks/useRotation';
 import type { SellerHighlight } from '../hooks/useSellerHighlight';
-import type { Cycle, CycleView, LoadStatus } from '../types';
+import type { Cycle, CycleView, LaneRow, LoadStatus } from '../types';
 import { RaceScenery } from './art/Scenery';
+import { BoardPager } from './BoardPager';
 import { CycleTabs } from './CycleTabs';
 import { RaceLane } from './RaceLane';
 
@@ -32,6 +35,33 @@ function statusMessage(status: LoadStatus, hasData: boolean, hasSales: boolean) 
   return hasSales ? null : 'Nenhuma venda registrada neste período';
 }
 
+/** Raias de uma tela. Montadas de novo a cada troca, então a largada se repete. */
+function Lanes({ rows, highlight }: { rows: LaneRow[]; highlight: SellerHighlight }) {
+  // Os corredores partem da largada no primeiro render e disparam a transição.
+  const [started, setStarted] = useState(false);
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setStarted(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  // Com 6 raias, cada uma fica mais baixa; os personagens diminuem para não invadir a de cima.
+  const dense = rows.length > 5;
+
+  return (
+    <ol className="relative flex h-full flex-col gap-1 pt-12 pr-10 pb-3 pl-2 wide:gap-0 wide:pt-10 wide:pr-[6.5rem] wide:pb-2 wide:pl-3">
+      {rows.map((row) => (
+        <RaceLane
+          key={row.seller.id}
+          row={row}
+          progress={started ? row.progress : 0}
+          highlight={highlight}
+          dense={dense}
+        />
+      ))}
+    </ol>
+  );
+}
+
 interface RaceBoardProps {
   view: CycleView;
   status: LoadStatus;
@@ -41,12 +71,9 @@ interface RaceBoardProps {
 }
 
 export function RaceBoard({ view, status, cycles, onSelectCycle, highlight }: RaceBoardProps) {
-  // Os corredores partem da largada no primeiro render e disparam a transição.
-  const [started, setStarted] = useState(false);
-  useEffect(() => {
-    const frame = requestAnimationFrame(() => setStarted(true));
-    return () => cancelAnimationFrame(frame);
-  }, []);
+  const { boards } = view;
+  const rotation = useRotation(boards.length, BOARD_ROTATION_MS);
+  const board = boards[rotation.index] ?? boards[0];
 
   const message = statusMessage(status, view.loaded, view.realized > 0);
 
@@ -71,24 +98,24 @@ export function RaceBoard({ view, status, cycles, onSelectCycle, highlight }: Ra
         <RaceScenery />
         <FinishGate />
 
-        <div role="status" className="absolute top-2 left-1/2 z-20 w-max max-w-[calc(100%-4rem)] -translate-x-1/2">
-          {message && (
-            <p className="rounded-full bg-plum px-4 py-1 text-center font-display text-base font-medium text-white shadow-card">
-              {message}
-            </p>
-          )}
+        <div className="absolute top-2 right-12 left-2 z-20 flex flex-wrap items-center gap-x-3 gap-y-1 wide:right-[8rem] wide:left-3">
+          <BoardPager
+            boards={boards}
+            activeIndex={rotation.index}
+            turn={rotation.turn}
+            intervalMs={BOARD_ROTATION_MS}
+            onSelect={rotation.select}
+          />
+          <div role="status" className="min-w-0">
+            {message && (
+              <p className="rounded-full bg-plum px-4 py-0.5 font-display text-base font-medium text-white shadow-card">
+                {message}
+              </p>
+            )}
+          </div>
         </div>
 
-        <ol className="relative flex h-full flex-col gap-1 py-3 pr-10 pl-2 wide:gap-0 wide:pt-10 wide:pr-[6.5rem] wide:pb-2 wide:pl-3">
-          {view.rows.map((row) => (
-            <RaceLane
-              key={row.seller.id}
-              row={row}
-              progress={started ? row.progress : 0}
-              highlight={highlight}
-            />
-          ))}
-        </ol>
+        {board && <Lanes key={board.id} rows={board.rows} highlight={highlight} />}
       </div>
     </section>
   );

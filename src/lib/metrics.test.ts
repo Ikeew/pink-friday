@@ -33,40 +33,63 @@ describe('buildCycleView', () => {
     expect(view.remaining).toBe(1_000_000);
     expect(view.attainment).toBe(0.5);
     expect(view.salesCount).toBe(12);
-    expect(view.rows).toHaveLength(5);
-    expect(view.rows[0]?.share).toBe(0.4);
+    expect(view.boards[0]?.rows).toHaveLength(5);
+    expect(view.boards[1]?.rows.map((row) => row.rank)).toEqual([6]);
+    expect(view.boards[0]?.rows[0]?.share).toBe(0.4);
   });
 
   it('sem meta individual, posiciona a pista em proporção ao líder', () => {
     const view = buildCycleView(cycle, data);
 
-    expect(view.rows[0]?.progress).toBeCloseTo(0.75);
-    expect(view.rows[1]?.progress).toBeCloseTo(0.5625);
-    expect(view.rows[0]?.note).toContain('Líder');
+    expect(view.boards[0]?.rows[0]?.progress).toBeCloseTo(0.7);
+    expect(view.boards[0]?.rows[1]?.progress).toBeCloseTo(0.525);
+    expect(view.boards[0]?.rows[0]?.note).toContain('Líder');
   });
 
   it('com meta individual, a linha de chegada é a meta', () => {
     const view = buildCycleView({ ...cycle, sellerTarget: 400_000 }, data);
 
-    expect(view.rows[0]?.progress).toBe(1);
-    expect(view.rows[1]?.progress).toBe(0.75);
-    expect(view.rows[1]?.note).toContain('75% da meta');
+    expect(view.boards[0]?.rows[0]?.progress).toBe(1);
+    expect(view.boards[0]?.rows[1]?.progress).toBe(0.75);
+    expect(view.boards[0]?.rows[1]?.note).toContain('75% da meta');
   });
 
   it('marca quem atingiu a meta individual, inclusive no valor exato', () => {
     const view = buildCycleView({ ...cycle, sellerTarget: 300_000 }, data);
 
-    expect(view.rows.map((row) => row.reachedGoal)).toEqual([true, true, false, false, false]);
-    expect(view.rows[0]?.note).toContain('Meta batida');
-    expect(buildCycleView(cycle, data).rows[0]?.reachedGoal).toBe(false);
+    expect(view.boards[0]?.rows.map((row) => row.reachedGoal)).toEqual([true, true, false, false, false]);
+    expect(view.boards[0]?.rows[0]?.note).toContain('Meta batida');
+    expect(buildCycleView(cycle, data).boards[0]?.rows[0]?.reachedGoal).toBe(false);
   });
 
   it('não quebra sem dados nem divide por zero', () => {
     const view = buildCycleView(cycle, null);
 
     expect(view.realized).toBe(0);
-    expect(view.rows).toEqual([]);
+    expect(view.boards[0]?.rows).toEqual([]);
     expect(buildCycleView({ ...cycle, target: 0 }, null).attainment).toBe(0);
+  });
+});
+
+describe('revezamento da pista', () => {
+  it('reveza vendedores 1–5, 6–10, equipes e SDRs', () => {
+    const view = buildCycleView({ ...cycle, sellerTarget: 300_000, teamTarget: 450_000 }, data);
+
+    expect(view.boards.map((board) => board.id)).toEqual(['vendedores-1', 'vendedores-2', 'equipes', 'sdrs']);
+    expect(view.boards[1]?.rows[0]?.note).toContain('da meta');
+    const team = view.boards[2]?.rows[0];
+    expect(team?.seller.name).toBe('Elite');
+    expect(team?.team).toBe('');
+    expect(team?.reachedGoal).toBe(true);
+    // SDRs não têm meta: a pista fica proporcional à líder.
+    expect(view.boards[3]?.rows[0]?.progress).toBeCloseTo(0.7);
+  });
+
+  it('sem dados, mostra só a primeira tela, vazia', () => {
+    const view = buildCycleView(cycle, null);
+
+    expect(view.boards).toHaveLength(1);
+    expect(view.boards[0]?.rows).toEqual([]);
   });
 });
 

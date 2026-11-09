@@ -40,16 +40,30 @@ export interface Cycle {
   target: number;
   /** Meta de cada vendedor. Sem ela, a pista é proporcional ao líder do ciclo. */
   sellerTarget?: number;
+  /** Meta de cada equipe. */
+  teamTarget?: number;
 }
 
 export interface RankedAmount {
   name: string;
   amount: number;
+  /** Quantidade de vendas, quando a consulta informa. */
+  count?: number;
 }
 
 export interface SellerSales extends RankedAmount {
   team: string;
   count: number;
+}
+
+/** Uma das telas que se revezam na pista. */
+export interface RaceBoardPage {
+  id: string;
+  /** Rótulo curto do seletor de telas. */
+  label: string;
+  /** Descrição completa, anunciada a leitores de tela. */
+  title: string;
+  rows: LaneRow[];
 }
 
 /** Resposta de `GET /api/dashboard`. */
@@ -64,7 +78,7 @@ export interface DashboardData {
 
 export interface LaneRow {
   seller: Seller;
-  /** Equipe do vendedor, sem o prefixo "Equipe". */
+  /** Equipe do vendedor, sem o prefixo "Equipe"; vazio para equipes e SDRs. */
   team: string;
   rank: number;
   amount: number;
@@ -96,7 +110,8 @@ export interface CycleView {
   averageTicket: number;
   salesCount: number;
   salesToday: number;
-  rows: LaneRow[];
+  /** Telas da pista, na ordem do revezamento. */
+  boards: RaceBoardPage[];
   teams: RankingRow[];
   sdrs: RankingRow[];
 }

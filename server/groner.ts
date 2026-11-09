@@ -5,24 +5,19 @@ import type { DashboardData, RankedAmount, SellerSales } from '../src/types.ts';
  * receber, então nem o token nem o texto das consultas podem chegar ao navegador.
  */
 const QUERIES = {
-  teams: `SELECT Receita, Equipe
-FROM (
-    SELECT TOP 5
-      SUM(v.ValorTotal) AS Receita, eq.Nome AS Equipe
-    FROM Vendas v
-    JOIN Leads l ON v.LeadId = l.Id
-    JOIN Usuarios u ON v.VendedorId = u.Id
-    JOIN Projetos p ON v.ProjetoId = p.Id
-    JOIN EquipesTecnicas eq ON u.EquipeId = eq.Id
-    WHERE v.Excluido = 0
-      [[AND v.DataVenda BETWEEN {{data}}]]
-      [[AND u.Id IN {{vendedor}}]]
-      [[AND l.OrigemId IN {{origem}}]]
-      [[AND u.EquipeId IN {{equipe}}]]
-    GROUP BY eq.Nome
-    ORDER BY Receita DESC
-) AS t
-ORDER BY Receita ASC`,
+  teams: `SELECT SUM(v.ValorTotal) AS Receita, eq.Nome AS Equipe
+FROM Vendas v
+JOIN Leads l ON v.LeadId = l.Id
+JOIN Usuarios u ON v.VendedorId = u.Id
+JOIN Projetos p ON v.ProjetoId = p.Id
+JOIN EquipesTecnicas eq ON u.EquipeId = eq.Id
+WHERE v.Excluido = 0
+  [[AND v.DataVenda BETWEEN {{data}}]]
+  [[AND u.Id IN {{vendedor}}]]
+  [[AND l.OrigemId IN {{origem}}]]
+  [[AND u.EquipeId IN {{equipe}}]]
+GROUP BY eq.Nome
+ORDER BY Receita DESC`,
   sellers: `SELECT COUNT(*) AS Vendas, SUM(v.ValorTotal) AS Receita, u.Nome AS Vendedor, eq.Nome AS Equipe
 FROM Vendas v
 JOIN Leads l ON v.LeadId = l.Id
@@ -157,7 +152,7 @@ export async function fetchDashboard(config: GronerConfig, from: string, to: str
       .map((row) => ({ name: toName(row['Equipe']), amount: toNumber(row['Receita']) }))
       .sort(byAmountDesc),
     sdrs: sdrRows
-      .map((row) => ({ name: toName(row['Nome']), amount: parseBrl(row['Valor Total']) }))
+      .map((row) => ({ name: toName(row['Nome']), amount: parseBrl(row['Valor Total']), count: toNumber(row['Vendas']) }))
       .sort(byAmountDesc),
     averageTicket: toNumber(ticketRows[0]?.['Ticket Médio']),
     salesToday: todayRows.reduce((sum, row) => sum + toNumber(row['Vendas']), 0),
