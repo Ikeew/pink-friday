@@ -7,6 +7,9 @@ import { shortName, titleCase, toSeller } from './people';
 const LEADER_POSITION = 0.75;
 const RANKING_SIZE = 5;
 
+/** Nome da equipe sem o prefixo "Equipe", que já está implícito no contexto. */
+const teamName = (name: string) => titleCase(name).replace(/^Equipe\s+/, '');
+
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 
 function buildLanes(cycle: Cycle, data: DashboardData | null, realized: number): LaneRow[] {
@@ -28,6 +31,7 @@ function buildLanes(cycle: Cycle, data: DashboardData | null, realized: number):
 
     return {
       seller: toSeller(sales.name),
+      team: teamName(sales.team),
       rank: index + 1,
       amount: sales.amount,
       share: realized > 0 ? sales.amount / realized : 0,
@@ -42,7 +46,7 @@ function buildRanking(entries: RankedAmount[], people: boolean): RankingRow[] {
   return entries.slice(0, RANKING_SIZE).map((entry, index) => ({
     id: entry.name,
     // O seletor do painel já diz "Equipes"; sem o prefixo, o nome cabe na linha.
-    name: people ? shortName(entry.name) : titleCase(entry.name).replace(/^Equipe\s+/, ''),
+    name: people ? shortName(entry.name) : teamName(entry.name),
     rank: index + 1,
     amount: entry.amount,
   }));

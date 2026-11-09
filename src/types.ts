@@ -64,6 +64,8 @@ export interface DashboardData {
 
 export interface LaneRow {
   seller: Seller;
+  /** Equipe do vendedor, sem o prefixo "Equipe". */
+  team: string;
   rank: number;
   amount: number;
   /** Participação no total realizado do ciclo (0–1). */

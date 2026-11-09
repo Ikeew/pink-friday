@@ -28,6 +28,11 @@ function Stat({ row, onDark = false, className = '' }: StatProps) {
   );
 }
 
+function TeamTag({ team, className = '' }: { team: string; className?: string }) {
+  if (!team) return null;
+  return <span className={`font-medium tracking-wide text-ink-soft uppercase ${className}`}>{team}</span>;
+}
+
 function GoalChip({ row, active }: { row: LaneRow; active: boolean }) {
   return (
     <span
@@ -79,7 +84,10 @@ export function RaceLane({ row, progress, highlight }: RaceLaneProps) {
       <RankBadge rank={rank} className="relative z-[1] size-9 text-xl wide:size-[3.25rem] wide:text-[1.75rem]" />
 
       {/* Cabeçalho da raia em telas menores. */}
-      <p className="min-w-0 font-display text-xl leading-tight font-semibold text-ink wide:hidden">{seller.name}</p>
+      <p className="min-w-0 font-display text-xl leading-tight font-semibold text-ink wide:hidden">
+        {seller.name}
+        <TeamTag team={row.team} className="ml-1.5 text-sm" />
+      </p>
       <Stat row={row} className="pr-2 text-right wide:hidden" />
 
       <div className="relative col-span-full h-[4.25rem] wide:h-full wide:min-h-[4rem] wide:flex-1">
@@ -93,7 +101,10 @@ export function RaceLane({ row, progress, highlight }: RaceLaneProps) {
         </div>
 
         <div className="absolute top-0 left-0 z-[3] flex max-w-full items-center gap-2 wide:top-1 wide:left-3">
-          <p className="hidden font-display text-[1.9rem] leading-tight font-semibold text-ink wide:block">{seller.name}</p>
+          <p className="hidden font-display text-[1.9rem] leading-tight font-semibold whitespace-nowrap text-ink wide:block">
+            {seller.name}
+            <TeamTag team={row.team} className="ml-2 text-[1.05rem]" />
+          </p>
           <GoalChip row={row} active={active} />
         </div>
 
