@@ -14,7 +14,7 @@ export const SELLER_PAGES = 2;
 /** Equipes e SDRs correm todos juntos, até este limite. */
 export const GROUP_RACE_SIZE = 6;
 /** Tempo de cada tela da pista antes de passar para a próxima. */
-export const BOARD_ROTATION_MS = 3 * 60_000;
+export const BOARD_ROTATION_MS = 1 * 60_000;
 
 /** Meta de cada vendedor no ciclo: quem chega nela ganha a coroa. */
 const SELLER_TARGET = 100_000;
