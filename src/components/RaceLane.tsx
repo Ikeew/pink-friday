@@ -8,17 +8,19 @@ import { RankBadge } from './SellerBadges';
 /** Acima deste avanço não há espaço à direita do corredor, e o valor passa para a esquerda. */
 const FLIP_LABEL_AT = 0.6;
 
-/** Rosa bem claro do contorno de quem ainda está no começo da meta. */
-const BORDER_START = '#fbd3e6';
+/** Rosa bem claro da linha de progresso de quem está no começo da meta. */
+const PROGRESS_START = '#f9c6dd';
 
 /**
- * Contorno do valor, proporcional ao atingimento da meta: rosa bem claro no começo,
- * escurecendo até o rosa-escuro, que é a cor de quem bateu. Sem meta, sem contorno.
+ * Cor da linha de progresso. Quem bateu a meta: bordô. Quem não bateu: proporcional
+ * ao atingimento, do rosa bem claro (0%) ao rosa-escuro (perto de 100%).
+ * Sem meta, rosa-escuro.
  */
-function goalBorderColor(attainment: number | null) {
-  if (attainment === null) return 'transparent';
-  const percent = Math.round(Math.min(1, Math.max(0, attainment)) * 100);
-  return `color-mix(in oklab, var(--color-brand-deep) ${percent}%, ${BORDER_START})`;
+function progressColor(row: LaneRow) {
+  if (row.reachedGoal) return 'var(--color-bordo)';
+  if (row.attainment === null) return 'var(--color-brand-deep)';
+  const percent = Math.round(Math.min(1, Math.max(0, row.attainment)) * 100);
+  return `color-mix(in oklab, var(--color-brand-deep) ${percent}%, ${PROGRESS_START})`;
 }
 
 interface StatProps {
@@ -118,9 +120,7 @@ export function RaceLane({ row, progress, highlight, dense = false }: RaceLanePr
       >
         {/* Trilho e preenchimento. */}
         <div className="absolute inset-x-0 bottom-2.5 h-3 overflow-hidden rounded-r-full bg-white/70 wide:-left-3 wide:bottom-3 wide:h-3.5">
-          <div
-            className="lane-fill size-full rounded-r-full bg-bordo"
-          />
+          <div className="lane-fill size-full rounded-r-full" style={{ backgroundColor: progressColor(row) }} />
         </div>
 
         <div className="absolute top-0 left-0 z-[3] flex max-w-full items-center gap-2 wide:top-1 wide:left-3">
@@ -167,8 +167,10 @@ export function RaceLane({ row, progress, highlight, dense = false }: RaceLanePr
         <div className="lane-runner pointer-events-none absolute inset-0 z-[3]">
           <div
             data-lane-label
-            style={{ borderColor: goalBorderColor(row.attainment) }}
             className={`absolute top-0 hidden rounded-lg border-2 bg-white px-2 py-0.5 wide:block ${
+              // Contorno rosa-escuro só em quem bateu a meta; nos demais a borda é invisível, para o tamanho não mudar.
+              row.reachedGoal ? 'border-brand-deep' : 'border-transparent'
+            } ${
               flipLabel ? 'left-0 -translate-x-[calc(100%+6rem)]' : 'left-2'
             }`}
           >
