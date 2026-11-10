@@ -32,11 +32,40 @@ const TEAM_TARGETS: Record<string, number> = {
 /** Meta de cada SDR no ciclo. */
 const SDR_TARGET = 150_000;
 
+/** Ciclo 2: meta total de R$ 2.900.000. */
+const CYCLE_2_SELLER_TARGET = 150_000;
+const CYCLE_2_SDR_TARGET = 200_000;
+/** Mesma proporção do Ciclo 1 (× 2,9M / 2,1M). */
+const CYCLE_2_TEAM_TARGET = 621_429;
+/** Mesma participação % de cada equipe no Ciclo 1, sobre R$ 2.900.000 (soma exata). */
+const CYCLE_2_TEAM_TARGETS: Record<string, number> = {
+  'EQUIPE ELITE': 651_686,
+  'EQUIPE DREAM': 521_348,
+  'EQUIPE SINERGIA': 521_348,
+  'EQUIPE GERAÇÃO': 423_596,
+  'EQUIPE PREDADORES': 391_011,
+  'EQUIPE PERFORMANCE': 391_011,
+};
+
+/** Ciclo 3: meta total de R$ 3.500.000. */
+const CYCLE_3_SELLER_TARGET = 200_000;
+const CYCLE_3_SDR_TARGET = 250_000;
+/** Mesma proporção do Ciclo 1 (× 3,5M / 2,1M). */
+const CYCLE_3_TEAM_TARGET = 750_000;
+/** Mesma participação % de cada equipe no Ciclo 1, sobre R$ 3.500.000 (soma exata). */
+const CYCLE_3_TEAM_TARGETS: Record<string, number> = {
+  'EQUIPE ELITE': 786_517,
+  'EQUIPE DREAM': 629_213,
+  'EQUIPE SINERGIA': 629_213,
+  'EQUIPE GERAÇÃO': 511_237,
+  'EQUIPE PREDADORES': 471_910,
+  'EQUIPE PERFORMANCE': 471_910,
+};
+
 export const cycles: Cycle[] = [
   { id: 'ciclo-1', label: 'Ciclo 1', start: '2026-11-01', end: '2026-11-10', target: 2_100_000, sellerTarget: SELLER_TARGET, teamTarget: TEAM_TARGET, teamTargets: TEAM_TARGETS, sdrTarget: SDR_TARGET },
-  { id: 'ciclo-2', label: 'Ciclo 2', start: '2026-10-10', end: '2026-10-20', target: 2_100_000, sellerTarget: SELLER_TARGET, teamTarget: TEAM_TARGET, teamTargets: TEAM_TARGETS, sdrTarget: SDR_TARGET },
-  // PLACEHOLDER: datas e meta do Ciclo 3 são provisórias.
-  { id: 'ciclo-3', label: 'Ciclo 3', start: '2026-10-21', end: '2026-10-31', target: 3_200_000, sellerTarget: SELLER_TARGET, teamTarget: TEAM_TARGET, teamTargets: TEAM_TARGETS, sdrTarget: SDR_TARGET },
+  { id: 'ciclo-2', label: 'Ciclo 2', start: '2026-11-11', end: '2026-11-20', target: 2_900_000, sellerTarget: CYCLE_2_SELLER_TARGET, teamTarget: CYCLE_2_TEAM_TARGET, teamTargets: CYCLE_2_TEAM_TARGETS, sdrTarget: CYCLE_2_SDR_TARGET },
+  { id: 'ciclo-3', label: 'Ciclo 3', start: '2026-11-21', end: '2026-11-30', target: 3_500_000, sellerTarget: CYCLE_3_SELLER_TARGET, teamTarget: CYCLE_3_TEAM_TARGET, teamTargets: CYCLE_3_TEAM_TARGETS, sdrTarget: CYCLE_3_SDR_TARGET },
 ];
 
 /** Personagem em `public/avatars/<nome>.webp`. */
@@ -60,6 +89,7 @@ export const profiles: Record<string, { look?: Look; sprite?: Sprite }> = {
   'FERNANDO FRANÇA': avatar('fernando', 0.909, 53.9, 0, 32),
   'OTAVIO AUGUSTO': avatar('otavio', 0.962, 59.8, 0.8, 32),
   'GESIEL DEOCLIDES': avatar('gesiel', 0.959, 64.1, 1.2, 32),
+  'VAZUNA PROVENÇA': avatar('vazuna', 0.89, 57, 0.5, 32),
   // SDRs
   'CAMILA LOPES': avatar('camila', 0.966, 55.7, 0.8, 32),
   'FILIPE CORREA': avatar('filipe', 0.964, 59.3, 1, 32),
