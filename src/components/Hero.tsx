@@ -67,7 +67,7 @@ export function Hero({ cycle }: { cycle: Cycle }) {
             src="/hero/mascotes-esquerda.webp"
             alt=""
             width={1030}
-            height={720}
+            height={718}
             className="h-auto w-full max-w-[17rem] shrink-0 panel:w-[20rem] panel:max-w-none"
           />
         </div>
