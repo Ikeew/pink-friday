@@ -93,6 +93,7 @@ export const profiles: Record<string, { look?: Look; sprite?: Sprite }> = {
   'ADRIANO DA SILVA TIBURCIO': avatar('adriano', 0.96, 69, 0, 34),
   'EDUARDO PALLAR': avatar('eduardo', 0.96, 62, 0, 34),
   'LEONARDO DOS SANTOS': avatar('leonardo', 0.993, 55, 0, 32),
+  'MAIQUE PAROLIM': avatar('maique', 0.998, 55, 0, 32),
   // SDRs
   'CAMILA LOPES': avatar('camila', 0.966, 55.7, 0.8, 32),
   'FILIPE CORREA': avatar('filipe', 0.964, 59.3, 1, 32),
