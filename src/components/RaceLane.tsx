@@ -70,6 +70,7 @@ function GoalChip({ row, active }: { row: LaneRow; active: boolean }) {
 function SpriteRunner({ sprite, crown }: { sprite: Sprite; crown: boolean }) {
   return (
     <div
+      data-lane-body
       className="run-body absolute right-0 bottom-0 h-full wide:h-[105%]"
       style={{ aspectRatio: sprite.aspect }}
     >
@@ -114,6 +115,7 @@ export function RaceLane({ row, progress, highlight, dense = false }: RaceLanePr
       <Stat row={row} className="pr-2 text-right wide:hidden" />
 
       <div
+        data-lane-track
         className={`relative col-span-full h-[4.25rem] wide:h-full wide:flex-1 ${
           dense ? 'wide:min-h-[3.25rem]' : 'wide:min-h-[4rem]'
         }`}
@@ -125,6 +127,7 @@ export function RaceLane({ row, progress, highlight, dense = false }: RaceLanePr
 
         <div className="absolute top-0 left-0 z-[3] flex max-w-full items-center gap-2 wide:top-1 wide:left-3">
           <p
+            data-lane-name
             className={`hidden font-display leading-tight font-semibold whitespace-nowrap text-ink wide:block ${
               dense ? 'text-[1.6rem]' : 'text-[1.9rem]'
             }`}

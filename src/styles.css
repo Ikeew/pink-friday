@@ -108,9 +108,10 @@
     --x: calc(var(--start) + var(--p) * (100% - var(--start)));
   }
 
+  /* `--lane-start` vem de RaceBoard: a largada fica depois do nome mais comprido da tela. */
   @variant wide {
     .lane {
-      --start: 11rem;
+      --start: var(--lane-start, 11rem);
     }
   }
 

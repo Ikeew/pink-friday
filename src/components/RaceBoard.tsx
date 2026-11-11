@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import { BOARD_ROTATION_MS } from '../data/dashboard';
 import { useRotation } from '../hooks/useRotation';
 import type { SellerHighlight } from '../hooks/useSellerHighlight';
@@ -35,6 +35,46 @@ function statusMessage(status: LoadStatus, hasData: boolean, hasSales: boolean) 
   return hasSales ? null : 'Nenhuma venda registrada neste período';
 }
 
+/** Folga entre o fim do nome e o personagem parado na largada. */
+const NAME_GAP_PX = 12;
+
+/**
+ * Largada da tela inteira: depois do nome mais comprido mais o personagem mais largo.
+ * Igual para todas as raias, para que a distância percorrida continue comparável.
+ */
+function useLaneStart() {
+  const listRef = useRef<HTMLOListElement>(null);
+  const [start, setStart] = useState<number | null>(null);
+
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+
+    const measure = () => {
+      let needed = 0;
+      for (const track of list.querySelectorAll<HTMLElement>('[data-lane-track]')) {
+        const name = track.querySelector<HTMLElement>('[data-lane-name]');
+        // Nome escondido (tela estreita): fica no cabeçalho da raia, então não há o que evitar.
+        if (!name || name.offsetWidth === 0) continue;
+        const runner = track.querySelector<HTMLElement>('[data-lane-body]') ?? track.querySelector<HTMLElement>('[data-lane-sprite]');
+        const nameRight = name.getBoundingClientRect().right - track.getBoundingClientRect().left;
+        const runnerWidth = runner?.getBoundingClientRect().width ?? 0;
+        needed = Math.max(needed, nameRight + runnerWidth + NAME_GAP_PX);
+      }
+      setStart(needed > 0 ? Math.ceil(needed) : null);
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(list);
+    // A fonte do nome pode chegar depois do primeiro render e mudar a largura.
+    document.fonts?.ready.then(measure);
+    return () => observer.disconnect();
+  }, []);
+
+  return { listRef, style: (start === null ? undefined : { '--lane-start': `${start}px` }) as CSSProperties | undefined };
+}
+
 /** Raias de uma tela. Montadas de novo a cada troca, então a largada se repete. */
 function Lanes({ rows, highlight }: { rows: LaneRow[]; highlight: SellerHighlight }) {
   // Os corredores partem da largada no primeiro render e disparam a transição.
@@ -46,9 +86,10 @@ function Lanes({ rows, highlight }: { rows: LaneRow[]; highlight: SellerHighligh
 
   // Com 6 raias, cada uma fica mais baixa; os personagens diminuem para não invadir a de cima.
   const dense = rows.length > 5;
+  const laneStart = useLaneStart();
 
   return (
-    <ol className="relative flex h-full flex-col gap-1 pt-12 pr-10 pb-3 pl-2 wide:gap-0 wide:pt-10 wide:pr-[6.5rem] wide:pb-2 wide:pl-3">
+    <ol ref={laneStart.listRef} style={laneStart.style} className="relative flex h-full flex-col gap-1 pt-12 pr-10 pb-3 pl-2 wide:gap-0 wide:pt-10 wide:pr-[6.5rem] wide:pb-2 wide:pl-3">
       {rows.map((row) => (
         <RaceLane
           key={row.seller.id}
