@@ -90,6 +90,8 @@ export const profiles: Record<string, { look?: Look; sprite?: Sprite }> = {
   'OTAVIO AUGUSTO': avatar('otavio', 0.962, 59.8, 0.8, 32),
   'GESIEL DEOCLIDES': avatar('gesiel', 0.959, 64.1, 1.2, 32),
   'VANUZA PROENÇA': avatar('vanuza', 0.89, 57, 0.5, 32),
+  'ADRIANO DA SILVA TIBURCIO': avatar('adriano', 0.96, 69, 0, 34),
+  'EDUARDO PALLAR': avatar('eduardo', 0.96, 62, 0, 34),
   // SDRs
   'CAMILA LOPES': avatar('camila', 0.966, 55.7, 0.8, 32),
   'FILIPE CORREA': avatar('filipe', 0.964, 59.3, 1, 32),
@@ -111,4 +113,6 @@ export const teamSprites: Record<string, Sprite> = {
   'EQUIPE SINERGIA': teamSticker('sinergia', 1.035),
   'EQUIPE DREAM': teamSticker('dream', 0.959),
   'EQUIPE PREDADORES': teamSticker('predadores', 1.001),
+  /** Mascote: a pantera, com a coroa sobre a cabeça (fica à esquerda da figura). */
+  'TIME MATRIZ': { ...teamSticker('matriz', 0.531), crownX: 45, crownY: 1, crownWidth: 45 },
 };
