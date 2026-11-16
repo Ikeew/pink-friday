@@ -84,22 +84,23 @@ describe('revezamento da pista', () => {
     expect(view.boards[3]?.rows[0]?.progress).toBeCloseTo(0.7);
   });
 
-  it('equipes com meta própria correm pelo percentual da meta', () => {
+  it('equipes correm pelo valor vendido, cada uma com a sua meta', () => {
     const teams = {
       ...data,
       teams: [
-        { name: 'EQUIPE A', amount: 300_000 },
         { name: 'EQUIPE B', amount: 200_000 },
+        { name: 'EQUIPE A', amount: 300_000 },
       ],
     };
     const view = buildCycleView({ ...cycle, teamTargets: { 'EQUIPE A': 400_000, 'EQUIPE B': 200_000 } }, teams);
     const rows = view.boards.find((board) => board.id === 'equipes')?.rows ?? [];
 
-    // B vendeu menos, mas bateu 100% da meta; A está em 75%.
-    expect(rows.map((row) => row.seller.name)).toEqual(['B', 'A']);
-    expect(rows.map((row) => row.attainment)).toEqual([1, 0.75]);
-    expect(rows[0]?.reachedGoal).toBe(true);
-    expect(rows[1]?.progress).toBe(0.75);
+    // A vendeu mais e fica na frente, mesmo em 75% da meta; B, atrás, bateu 100%.
+    expect(rows.map((row) => row.seller.name)).toEqual(['A', 'B']);
+    expect(rows.map((row) => row.attainment)).toEqual([0.75, 1]);
+    expect(rows.map((row) => row.reachedGoal)).toEqual([false, true]);
+    expect(rows[0]?.progress).toBe(0.75);
+    expect(rows[1]?.progress).toBe(1);
   });
 
   it('sem dados, mostra só a primeira tela, vazia', () => {

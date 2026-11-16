@@ -18,10 +18,6 @@ const RANKING_SIZE = 5;
 
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
 
-/** Valor ÷ meta; sem meta, o próprio valor (só para ordenar). */
-const attainmentOf = (entry: { amount: number; target?: number }) =>
-  entry.target ? entry.amount / entry.target : entry.amount;
-
 interface LaneEntry {
   runner: Seller;
   amount: number;
@@ -110,7 +106,8 @@ function buildBoards(cycle: Cycle, data: DashboardData | null): RaceBoardPage[] 
     });
   };
 
-  // Cada equipe tem meta própria, então a corrida é pelo % da meta, não pelo valor.
+  // A ordem é pelo valor vendido; a pista e a coroa seguem a meta própria de cada equipe.
+  // Por isso uma equipe pode bater a meta atrás de outra que não bateu.
   const teams = (data?.teams ?? [])
     .map((entry) => ({
       runner: toTeamRunner(entry.name),
@@ -118,8 +115,8 @@ function buildBoards(cycle: Cycle, data: DashboardData | null): RaceBoardPage[] 
       count: entry.count,
       target: cycle.teamTargets?.[entry.name.trim()] ?? cycle.teamTarget,
     }))
-    .sort((a, b) => attainmentOf(b) - attainmentOf(a) || b.amount - a.amount);
-  group('equipes', 'Equipes', 'Corrida das equipes, pelo percentual da meta', teams, cycle.teamTarget);
+    .sort((a, b) => b.amount - a.amount);
+  group('equipes', 'Equipes', 'Corrida das equipes, pelo valor vendido', teams, cycle.teamTarget);
 
   const sdrs = (data?.sdrs ?? []).map((entry) => ({ runner: toSdrRunner(entry.name), amount: entry.amount, count: entry.count }));
   group('sdrs', 'SDRs', 'Corrida das SDRs', sdrs, cycle.sdrTarget);
