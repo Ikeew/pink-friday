@@ -44,6 +44,7 @@ WHERE v.Excluido = 0
       OR u.Nome LIKE '%ERICA GOMES%'
       OR u.Nome LIKE 'GISA%'
       OR u.Nome LIKE 'KETLY%'
+      OR u.Nome LIKE '%JULIANA DA CUNHA BRUNKEN%'
   )
   [[AND v.DataVenda BETWEEN {{data}}]]
 GROUP BY u.Nome
