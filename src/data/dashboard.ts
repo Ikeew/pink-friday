@@ -102,12 +102,12 @@ export const profiles: Record<string, { look?: Look; sprite?: Sprite }> = {
   'JHONATHAN MACHADO SILVEIRA': avatar('jhonathan-machado', 0.981, 66, 0.5, 28),
   'JHONATAN DOS REIS': avatar('jhonatan-reis', 0.862, 74, 1, 34),
   'ANDRESSA LUCHINI': avatar('andressa', 0.983, 64, 0.5, 30),
-  'GUILHERME DIAS': avatar('guilherme', 0.945, 67, 0.5, 32),
+  'GUILHERME DIAS NOVO': avatar('guilherme', 0.945, 67, 0.5, 32),
   // SDRs
   'CAMILA LOPES': avatar('camila', 0.966, 55.7, 0.8, 32),
   'FILIPE CORREA': avatar('filipe', 0.964, 59.3, 1, 32),
   'KETLY SANTOS': avatar('ketly', 0.959, 54.7, 0.9, 32),
-  'ERICA GOMES NOVO': avatar('erica', 0.969, 54.3, 1.6, 32),
+  'ERICA GOMES': avatar('erica', 0.969, 54.3, 1.6, 32),
   'GISA ALVES': avatar('gisa', 0.963, 53.5, 0.8, 32),
 };
 
